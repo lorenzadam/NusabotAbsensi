@@ -3,14 +3,14 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="pages/pengguna.php" class="nav-link">
+            <a href="pages/pengguna" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>Pengguna</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="pages/absensi.php" class="nav-link">
-              <i class="nav-icon fas fa-baby"></i>
+              <i class="nav-icon fas fa-id-card"></i>
               <p>Absensi</p>
             </a>
           </li>
@@ -22,7 +22,7 @@
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-columns"></i>
+              <i class="nav-icon fas fa-wrench"></i>
               <p>Pengaturan<i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
@@ -42,7 +42,7 @@
           </li>
           <li class="nav-item">
             <a href="pages/profil.php" class="nav-link">
-              <i class="nav-icon fas fa-box"></i>
+              <i class="nav-icon fas fa-male"></i>
               <p>Profil</p>
             </a>
           </li>
