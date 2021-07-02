@@ -58,11 +58,11 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM pengguna where 
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label>Nomor Induk</label>
-                                            <input type="text" class="form-control" name="nomor_induk" placeholder="Nomor Induk / Identitas Pengguna" value="<?= $result[0] ?>" autofocus>
+                                            <input type="text" class="form-control" name="nomor_induk" placeholder="Nomor Induk / Identitas Pengguna" value="<?= $result[0] ?>" autofocus required>
                                         </div>
                                         <div class="form-group">
                                             <label>Nama</label>
-                                            <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap" value="<?= $result[1] ?>">
+                                            <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap" value="<?= $result[1] ?>" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Jabatan / Status</label>
@@ -74,7 +74,7 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM pengguna where 
                                         </div>
                                         <div class="form-group">
                                             <label>Tag</label>
-                                            <input type="text" name="tag" class="form-control" value="<?= $result[2] ?>">
+                                            <input type="text" name="tag" class="form-control" value="<?= $result[2] ?>"> required
                                         </div>
                                     </div>
                                     <!-- /.card-body -->

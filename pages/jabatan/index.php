@@ -142,7 +142,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
                   <div class="card-body">
                     <div class="form-group">
                       <label>Jabatan / Status</label>
-                      <input type="text" name="jabatan_status" class="form-control">
+                      <input type="text" name="jabatan_status" class="form-control" required>
                     </div>
                     <div class="form-group">
                       <label>Hak Akses</label>

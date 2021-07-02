@@ -152,11 +152,11 @@ $result = mysqli_query($mysqli, "SELECT * FROM pengguna");
                   <div class="card-body">
                     <div class="form-group">
                       <label>Nomor Induk</label>
-                      <input type="text" class="form-control" name="nomor_induk" placeholder="Nomor Induk / Identitas Pengguna" autofocus>
+                      <input type="text" class="form-control" name="nomor_induk" placeholder="Nomor Induk / Identitas Pengguna" autofocus required>
                     </div>
                     <div class="form-group">
                       <label>Nama</label>
-                      <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap">
+                      <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap" required>
                     </div>
                     <div class="form-group">
                       <label>Jabatan / Status</label>
@@ -168,7 +168,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM pengguna");
                     </div>
                     <div class="form-group">
                       <label>Tag</label>
-                      <input type="text" name="tag" placeholder="Scan Tag RFID" class="form-control">
+                      <input type="text" name="tag" placeholder="Scan Tag RFID" class="form-control" required>
                     </div>
                   </div>
                   <!-- /.card-body -->

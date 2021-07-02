@@ -58,7 +58,7 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM jabatan_status 
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label>Jabatan / Status</label>
-                                            <input type="text" class="form-control" name="jabatan_status" value="<?= $result[1] ?>" autofocus>
+                                            <input type="text" class="form-control" name="jabatan_status" value="<?= $result[1] ?>" autofocus required>
                                         </div>
                                         <div class="form-group">
                                             <label>Cabang / Gedung</label>
