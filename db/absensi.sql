@@ -86,8 +86,8 @@ CREATE TABLE `hak_akses` (
 
 INSERT INTO `hak_akses` (`id`, `hak`) VALUES
 (0, 'nusabot'),
-(1, 'admin'),
-(2, 'general');
+(1, 'Full'),
+(2, 'General');
 
 -- --------------------------------------------------------
 
