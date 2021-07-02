@@ -9,13 +9,13 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/absensi.php" class="nav-link">
+            <a href="pages/absensi" class="nav-link">
               <i class="nav-icon fas fa-id-card"></i>
               <p>Absensi</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/cuti.php" class="nav-link">
+            <a href="pages/cuti" class="nav-link">
               <i class="nav-icon fas fa-calendar"></i>
               <p>Cuti</p>
             </a>
@@ -27,13 +27,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="pages/jabatan.php" class="nav-link">
+                <a href="pages/jabatan" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Jabatan / Status</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="pages/cabang.php" class="nav-link">
+                <a href="pages/cabang" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Cabang / Gedung</p>
                 </a>
@@ -41,7 +41,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="pages/profil.php" class="nav-link">
+            <a href="pages/profil" class="nav-link">
               <i class="nav-icon fas fa-male"></i>
               <p>Profil</p>
             </a>
