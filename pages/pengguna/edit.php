@@ -74,7 +74,7 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM pengguna where 
                                         </div>
                                         <div class="form-group">
                                             <label>Tag</label>
-                                            <input type="text" name="tag" class="form-control" value="<?= $result[2] ?>"> required
+                                            <input type="text" name="tag" class="form-control" value="<?= $result[2] ?>" required>
                                         </div>
                                     </div>
                                     <!-- /.card-body -->
