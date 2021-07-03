@@ -90,7 +90,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM pengguna");
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <button type="button" class="btn btn-block btn-outline-primary">Cek Pengguna (Scan Tag / Kartu)</button>
+                  <a href="../../scan.php" target="_blank" type="button" class="btn btn-block btn-outline-primary">Cek Pengguna (Scan Tag / Kartu)</a>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
