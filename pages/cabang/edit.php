@@ -2,7 +2,7 @@
 require_once("../../etc/config.php");
 require_once("../../etc/function.php");
 
-$result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM jabatan_status where id = '{$_GET['id']}'"));
+$result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM cabang_gedung where id = '{$_GET['id']}'"));
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +33,7 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM jabatan_status 
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <a href="../jabatan" class="btn btn-app">
+                            <a href="../cabang" class="btn btn-app">
                                 <i class="fas fa-arrow-left"></i> Batal
                             </a>
                         </div>
@@ -48,21 +48,64 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM jabatan_status 
                         <div class="col-12">
                             <div class="card card-warning">
                                 <div class="card-header">
-                                    <h3 class="card-title">Ubah Jabatan / Status</h3>
+                                    <h3 class="card-title">Ubah Cabang / Gedung</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
                                 <form method="post" action="index.php">
                                     <input type="hidden" name="id" value="<?= $result[0] ?>">
-                                    <input type="hidden" name="jabatan_lama" value="<?= $result[1] ?>">
+                                    <input type="hidden" name="lokasi_lama" value="<?= $result[1] ?>">
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label>Jabatan / Status</label>
-                                            <input type="text" class="form-control" name="jabatan_status" value="<?= $result[1] ?>" autofocus>
+                                            <label>Lokasi</label>
+                                            <input type="text" class="form-control" name="lokasi" value="<?= $result[1] ?>" autofocus required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Cabang / Gedung</label>
-                                            <?php comboBoxSelectEdit($mysqli, 'hak_akses', 'id', 'hak', 'hak_akses', 0, $result[2], getAnyTampil($mysqli, "hak", "hak_akses", "id", $result[2])) ?>
+                                            <label>Jam Masuk</label>
+                                            <input type="time" class="form-control" name="jam_masuk" value="<?= $result[2] ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Jam Pulang</label>
+                                            <input type="time" class="form-control" name="jam_pulang" value="<?= $result[3] ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mulai Istirahat</label>
+                                            <input type="time" class="form-control" name="istirahat_mulai" value="<?= $result[4] ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Selesai Istirahat</label>
+                                            <input type="time" class="form-control" name="istirahat_selesai" value="<?= $result[5] ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Hari Kerja</label>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_kerja[]" <?php if (strstr($result[6], '1')) echo "checked"; ?>>
+                                                <label for="senin" class="custom-control-label">Senin</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="selasa" value="2" name="hari_kerja[]" <?php if (strstr($result[6], '2')) echo "checked"; ?>>
+                                                <label for="selasa" class="custom-control-label">Selasa</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="rabu" value="3" name="hari_kerja[]" <?php if (strstr($result[6], '3')) echo "checked"; ?>>
+                                                <label for="rabu" class="custom-control-label">Rabu</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="kamis" value="4" name="hari_kerja[]" <?php if (strstr($result[6], '4')) echo "checked"; ?>>
+                                                <label for="kamis" class="custom-control-label">Kamis</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="jumat" value="5" name="hari_kerja[]" <?php if (strstr($result[6], '5')) echo "checked"; ?>>
+                                                <label for="jumat" class="custom-control-label">Jumat</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_kerja[]" <?php if (strstr($result[6], '6')) echo "checked"; ?>>
+                                                <label for="sabtu" class="custom-control-label">Sabtu</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_kerja[]" <?php if (strstr($result[6], '7')) echo "checked"; ?>>
+                                                <label for="minggu" class="custom-control-label">Minggu</label>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- /.card-body -->

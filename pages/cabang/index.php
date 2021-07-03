@@ -3,18 +3,37 @@ require_once("../../etc/config.php");
 require_once("../../etc/function.php");
 
 if (isset($_POST['tambah'])) {
-  $result = mysqli_query($mysqli, "INSERT INTO jabatan_status(jabatan_status,hak_akses) VALUES('{$_POST['jabatan_status']}','{$_POST['hak_akses']}')");
+  $hari_kerja = $_POST['hari_kerja'];
+  $pilihan_kerja = "";
+  for ($i = 0; $i < count($hari_kerja); $i++) {
+    if ($i == count($hari_kerja) - 1) {
+      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i];
+    } else {
+      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i] . ",";
+    }
+  }
+  $result = mysqli_query($mysqli, "INSERT INTO cabang_gedung(lokasi,jam_masuk,jam_pulang,istirahat_mulai,istirahat_selesai,hari_kerja) VALUES('{$_POST['lokasi']}','{$_POST['jam_masuk']}','{$_POST['jam_pulang']}','{$_POST['istirahat_mulai']}','{$_POST['istirahat_selesai']}','$pilihan_kerja')");
   $successAdd = 1;
 }
 
 if (isset($_POST['ubah'])) {
-  $result = mysqli_query($mysqli, "UPDATE jabatan_status SET jabatan_status='{$_POST['jabatan_status']}',hak_akses='{$_POST['hak_akses']}' WHERE id='{$_POST['id']}'");
+  $hari_kerja = $_POST['hari_kerja'];
+  $pilihan_kerja = "";
+  for ($i = 0; $i < count($hari_kerja); $i++) {
+    if ($i == count($hari_kerja) - 1) {
+      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i];
+    } else {
+      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i] . ",";
+    }
+  }
+
+  $result = mysqli_query($mysqli, "UPDATE cabang_gedung SET lokasi='{$_POST['lokasi']}',jam_masuk='{$_POST['jam_masuk']}',jam_pulang='{$_POST['jam_pulang']}',istirahat_mulai='{$_POST['istirahat_mulai']}',istirahat_selesai='{$_POST['istirahat_selesai']}',hari_kerja='$pilihan_kerja' WHERE id='{$_POST['id']}'");
   $successEdit = 1;
 }
 
 if (isset($_GET['id'])) {
-  $nama = getAnyTampil($mysqli, 'jabatan_status', 'jabatan_status', 'id', $_GET['id']);
-  $aktif = getAnyTampil($mysqli, 'aktif', 'jabatan_status', 'id', $_GET['id']);
+  $nama = getAnyTampil($mysqli, 'lokasi', 'cabang_gedung', 'id', $_GET['id']);
+  $aktif = getAnyTampil($mysqli, 'aktif', 'cabang_gedung', 'id', $_GET['id']);
   if ($aktif == 1) {
     $aktif = 0;
     $aktifText = "non-aktif";
@@ -22,11 +41,11 @@ if (isset($_GET['id'])) {
     $aktif = 1;
     $aktifText = "aktif";
   }
-  $result = mysqli_query($mysqli, "UPDATE jabatan_status SET aktif='$aktif' WHERE id='{$_GET['id']}'");
+  $result = mysqli_query($mysqli, "UPDATE cabang_gedung SET aktif='$aktif' WHERE id='{$_GET['id']}'");
   $successDelete = 1;
 }
 
-$result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
+$result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +76,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Jabatan / Status</h1>
+              <h1>Cabang / Gedung</h1>
             </div>
           </div>
         </div><!-- /.container-fluid -->
@@ -65,13 +84,13 @@ $result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
           <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h5><i class="icon fas fa-check"></i> Berhasil!</h5>
-            <b><?php echo $_POST['jabatan_status'] ?></b> sudah ditambahkan.
+            <b><?php echo $_POST['lokasi'] ?></b> sudah ditambahkan.
           </div>
         <?php } else if ($successEdit == 1) { ?>
           <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h5><i class="icon fas fa-check"></i> Berhasil!</h5>
-            <b><?php echo $_POST['jabatan_lama'] ?></b> sudah berhasil diubah.
+            <b><?php echo $_POST['lokasi_lama'] ?></b> sudah berhasil diubah.
           </div>
         <?php } else if ($successDelete == 1) { ?>
           <div class="alert alert-warning alert-dismissible">
@@ -93,8 +112,12 @@ $result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th>Jabatan / Status</th>
-                        <th>Hak Akses</th>
+                        <th>Lokasi</th>
+                        <th>Masuk</th>
+                        <th>Pulang</th>
+                        <th>Mulai Istirahat</th>
+                        <th>Selesai Istirahat</th>
+                        <th>Hari Kerja</th>
                         <th>Aktif</th>
                         <th>Aksi</th>
                       </tr>
@@ -112,8 +135,12 @@ $result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
                         }
                       ?>
                         <tr>
-                          <td><?php echo $data['jabatan_status'] ?></td>
-                          <td><?php echo getAnyTampil($mysqli, 'hak', 'hak_akses', 'id', $data['hak_akses']) ?></td>
+                          <td><?php echo $data['lokasi'] ?></td>
+                          <td><?php echo $data['jam_masuk'] ?></td>
+                          <td><?php echo $data['jam_pulang'] ?></td>
+                          <td><?php echo $data['istirahat_mulai'] ?></td>
+                          <td><?php echo $data['istirahat_selesai'] ?></td>
+                          <td><?php echo $data['hari_kerja'] ?></td>
                           <td><?php echo $aktif ?></td>
                           <td><a href="edit.php?id=<?= $data['id'] ?>"><i class="fas fa-edit"></i></a> | <a href="index.php?id=<?= $data['id'] ?>"><i class="fas fa-minus-circle"></i></a></td>
                         </tr>
@@ -121,8 +148,12 @@ $result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>Jabatan / Status</th>
-                        <th>Hak Akses</th>
+                        <th>Lokasi</th>
+                        <th>Masuk</th>
+                        <th>Pulang</th>
+                        <th>Mulai Istirahat</th>
+                        <th>Selesai Istirahat</th>
+                        <th>Hari Kerja</th>
                         <th>Aktif</th>
                         <th>Aksi</th>
                       </tr>
@@ -141,15 +172,55 @@ $result = mysqli_query($mysqli, "SELECT * FROM jabatan_status");
                 <form method="post" action="index.php">
                   <div class="card-body">
                     <div class="form-group">
-                      <label>Jabatan / Status</label>
-                      <input type="text" name="jabatan_status" class="form-control">
+                      <label>Lokasi</label>
+                      <input type="text" name="lokasi" class="form-control" required>
                     </div>
                     <div class="form-group">
-                      <label>Hak Akses</label>
-                      <select class="custom-select" name="hak_akses">
-                        <option value='1'>Full</option>
-                        <option value='2'>General</option>
-                      </select>
+                      <label>Jam Masuk</label>
+                      <input type="time" name="jam_masuk" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Jam Pulang</label>
+                      <input type="time" name="jam_pulang" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Mulai Istirahat</label>
+                      <input type="time" name="istirahat_mulai" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Selesai Istirahat</label>
+                      <input type="time" name="istirahat_selesai" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Hari Kerja</label>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_kerja[]">
+                        <label for="senin" class="custom-control-label">Senin</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="selasa" value="2" name="hari_kerja[]">
+                        <label for="selasa" class="custom-control-label">Selasa</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="rabu" value="3" name="hari_kerja[]">
+                        <label for="rabu" class="custom-control-label">Rabu</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="kamis" value="4" name="hari_kerja[]">
+                        <label for="kamis" class="custom-control-label">Kamis</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="jumat" value="5" name="hari_kerja[]">
+                        <label for="jumat" class="custom-control-label">Jumat</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_kerja[]">
+                        <label for="sabtu" class="custom-control-label">Sabtu</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_kerja[]">
+                        <label for="minggu" class="custom-control-label">Minggu</label>
+                      </div>
                     </div>
                   </div>
                   <!-- /.card-body -->
