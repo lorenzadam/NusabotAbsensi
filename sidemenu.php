@@ -21,6 +21,12 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="pages/libur" class="nav-link">
+              <i class="nav-icon fas fa-globe"></i>
+              <p>Tanggal Libur Khusus</p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-wrench"></i>
               <p>Pengaturan<i class="fas fa-angle-left right"></i></p>
