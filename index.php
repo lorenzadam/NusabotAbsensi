@@ -1,3 +1,6 @@
+<?php
+include('session.php');
+?>
 <!DOCTYPE html>
 <html lang="id">
 <?php include 'header.php' ?>
@@ -21,7 +24,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="info">
-            <a href="#" class="d-block">Bapak Budi</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['nama'] ?></a>
           </div>
         </div>
 
@@ -72,9 +75,12 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.id" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.id" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
       <div class="float-right d-none d-sm-inline-block">
-        <b>Versi</b> 0.0.1
+        <div class="btn-group">
+          <a href="logout.php" type="button" class="btn btn-info">Keluar</a>
+          <a href="pages/profil" target="_blank" type="button" class="btn btn-info">Profil</a>
+        </div>
       </div>
     </footer>
 
