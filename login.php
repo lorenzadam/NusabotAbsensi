@@ -57,7 +57,7 @@ if (isset($_POST['login'])) {
 
         <form action="" method="post">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" name="nomor_induk" placeholder="Nomor Induk">
+            <input type="text" class="form-control" name="nomor_induk" placeholder="Nomor Induk" autofocus>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
