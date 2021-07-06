@@ -1,8 +1,16 @@
 <?php
 require_once("etc/config.php");
 if (isset($_POST['tag'])) {
-    $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT nomor_induk, nama FROM pengguna where tag = '{$_POST['tag']}'"));
-    $nama = $result[1] . " (" . $result[0] . ")";
+    $sql = "SELECT nomor_induk, nama FROM pengguna where tag = '{$_POST['tag']}'";
+    $result = mysqli_query($mysqli, $sql);
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+    $count = mysqli_num_rows($result);
+    if ($count == 1) {
+        $nama = $row['nama'] . " (" . $row['nomor_induk'] . ")";
+      } else {
+        $nama = "Tag tidak terdaftar";
+      }
 }
 
 ?>

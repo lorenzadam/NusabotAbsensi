@@ -3,6 +3,14 @@ require_once("../../etc/config.php");
 require_once("../../etc/function.php");
 
 $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM cabang_gedung where id = '{$_GET['id']}'"));
+
+if ($result[7] == 1) {
+    $zona = "WIB";
+} elseif ($result[7] == 2) {
+    $zona = "WITA";
+} elseif ($result[7] == 3) {
+    $zona = "WIT";
+}
 ?>
 
 <!DOCTYPE html>
@@ -106,6 +114,15 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM cabang_gedung w
                                                 <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_kerja[]" <?php if (strstr($result[6], '7')) echo "checked"; ?>>
                                                 <label for="minggu" class="custom-control-label">Minggu</label>
                                             </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Zona Waktu</label>
+                                            <select class="custom-select" name="zona_waktu">
+                                                <option value="<?php echo $result[7] ?>"><?php echo $zona ?></option>
+                                                <?php if ($result[7] == 2 || $result[7] == 3) echo "<option value='1'>WIB</option>" ?>
+                                                <?php if ($result[7] == 1 || $result[7] == 3) echo "<option value='2'>WITA</option>" ?>
+                                                <?php if ($result[7] == 2 || $result[7] == 1) echo "<option value='3'>WIT</option>" ?>
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- /.card-body -->

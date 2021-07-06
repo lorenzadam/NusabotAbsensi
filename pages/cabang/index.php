@@ -27,7 +27,7 @@ if (isset($_POST['ubah'])) {
     }
   }
 
-  $result = mysqli_query($mysqli, "UPDATE cabang_gedung SET lokasi='{$_POST['lokasi']}',jam_masuk='{$_POST['jam_masuk']}',jam_pulang='{$_POST['jam_pulang']}',istirahat_mulai='{$_POST['istirahat_mulai']}',istirahat_selesai='{$_POST['istirahat_selesai']}',hari_kerja='$pilihan_kerja' WHERE id='{$_POST['id']}'");
+  $result = mysqli_query($mysqli, "UPDATE cabang_gedung SET lokasi='{$_POST['lokasi']}',jam_masuk='{$_POST['jam_masuk']}',jam_pulang='{$_POST['jam_pulang']}',istirahat_mulai='{$_POST['istirahat_mulai']}',istirahat_selesai='{$_POST['istirahat_selesai']}',hari_kerja='$pilihan_kerja',zona_waktu='{$_POST['zona_waktu']}' WHERE id='{$_POST['id']}'");
   $successEdit = 1;
 }
 
@@ -118,6 +118,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                         <th>Mulai Istirahat</th>
                         <th>Selesai Istirahat</th>
                         <th>Hari Kerja</th>
+                        <th>Zona Waktu</th>
                         <th>Aktif</th>
                         <th>Aksi</th>
                       </tr>
@@ -133,6 +134,14 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                         if ($data['id'] == 1) {
                           continue;
                         }
+
+                        if ($data['zona_waktu'] == 1) {
+                          $zona = "WIB";
+                        } elseif ($data['zona_waktu'] == 2) {
+                          $zona = "WITA";
+                        } elseif ($data['zona_waktu'] == 3) {
+                          $zona = "WIT";
+                        }
                       ?>
                         <tr>
                           <td><?php echo $data['lokasi'] ?></td>
@@ -141,6 +150,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                           <td><?php echo $data['istirahat_mulai'] ?></td>
                           <td><?php echo $data['istirahat_selesai'] ?></td>
                           <td><?php echo $data['hari_kerja'] ?></td>
+                          <td><?php echo $zona ?></td>
                           <td><?php echo $aktif ?></td>
                           <td><a href="edit.php?id=<?= $data['id'] ?>"><i class="fas fa-edit"></i></a> | <a href="index.php?id=<?= $data['id'] ?>"><i class="fas fa-minus-circle"></i></a></td>
                         </tr>
@@ -154,6 +164,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                         <th>Mulai Istirahat</th>
                         <th>Selesai Istirahat</th>
                         <th>Hari Kerja</th>
+                        <th>Zona Waktu</th>
                         <th>Aktif</th>
                         <th>Aksi</th>
                       </tr>
@@ -221,6 +232,14 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                         <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_kerja[]">
                         <label for="minggu" class="custom-control-label">Minggu</label>
                       </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Zona Waktu</label>
+                      <select class="custom-select" name="zona_waktu">
+                        <option value="1">WIB</option>
+                        <option value="2">WITA</option>
+                        <option value="3">WIT</option>
+                      </select>
                     </div>
                   </div>
                   <!-- /.card-body -->
