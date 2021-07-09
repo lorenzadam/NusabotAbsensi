@@ -50,29 +50,44 @@ $result = mysqli_query($mysqli, "SELECT * FROM absensi");
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th>Nomor Induk</th>
-                        <th>Nama</th>
                         <th>Absen</th>
+                        <th>Nama</th>
+                        <th>Nomor Induk</th>
                         <th>Kategori</th>
                         <th>ID Mesin</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <?php while ($data = mysqli_fetch_array($result)) { ?>
+                      <?php while ($data = mysqli_fetch_array($result)) {
+                        if ($data['kategori'] == 1) {
+                          $kategori = "Masuk";
+                        } elseif ($data['kategori'] == 2) {
+                          $kategori = "Mulai Istirahat";
+                        } elseif ($data['kategori'] == 3) {
+                          $kategori = "Selesai Istirahat";
+                        } elseif ($data['kategori'] == 4) {
+                          $kategori = "Pulang";
+                        }
+
+                        //menghindari program error karena tag tidak terdaftar
+                        if ($data['nomor_induk'] == "") {
+                          continue;
+                        }
+                      ?>
                         <tr>
-                          <td><?php echo $data['nomor_induk'] ?></td>
-                          <td><?php echo getAnyTampil($mysqli, 'nama', 'pengguna', 'nomor_induk', $data['nomor_induk']) ?></td>
                           <td><?php echo $data['absen'] ?></td>
-                          <td><?php echo $data['kategori'] ?></td>
+                          <td><?php echo getAnyTampil($mysqli, 'nama', 'pengguna', 'nomor_induk', $data['nomor_induk']) ?></td>
+                          <td><?php echo $data['nomor_induk'] ?></td>
+                          <td><?php echo $kategori ?></td>
                           <td><?php echo $data['idmesin'] ?></td>
                         </tr>
                       <?php } ?>
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>Nomor Induk</th>
-                        <th>Nama</th>
                         <th>Absen</th>
+                        <th>Nama</th>
+                        <th>Nomor Induk</th>
                         <th>Kategori</th>
                         <th>ID Mesin</th>
                       </tr>

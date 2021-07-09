@@ -14,10 +14,11 @@ if (isset($_GET['tag'])) {
     $idmesin = $_GET['idmesin'];
     $tag = $_GET['tag'];
     $nomor_induk = getNomorInduk($mysqli, $tag);
+    $kategori = $_GET['kategori'];
 
     // Statement SQL
-    $sql = "INSERT INTO absensi (nomor_induk, absen, idmesin)
-    VALUES ('$nomor_induk','$waktu', '$idmesin')";
+    $sql = "INSERT INTO absensi (nomor_induk, absen, kategori, idmesin)
+    VALUES ('$nomor_induk','$waktu', '$kategori', '$idmesin')";
 
     $result = mysqli_query($mysqli, $sql);
 
