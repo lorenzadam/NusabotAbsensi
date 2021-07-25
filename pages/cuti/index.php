@@ -20,7 +20,7 @@ if (isset($_GET['id'])) {
   $successDelete = 1;
 }
 
-$result = mysqli_query($mysqli, "SELECT * FROM cuti");
+$result = mysqli_query($mysqli, "SELECT * FROM cuti limit 500");
 ?>
 
 <!DOCTYPE html>
