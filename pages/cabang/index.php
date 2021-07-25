@@ -131,7 +131,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                           $aktif = "Non-aktif";
                         }
 
-                        if ($data['id'] == 1) {
+                        if ($data['id'] == 0) {
                           continue;
                         }
 
