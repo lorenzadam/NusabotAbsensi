@@ -83,8 +83,6 @@ if (!isset($_POST['tampilkan'])) {
                   <form method="post" action="">
                     <div class="form-group">
                       <div class="form-group">
-                        <?php //comboBoxSelect($mysqli, "cabang_gedung", "id", "lokasi", "cabang_gedung", 0) 
-                        ?>
                         <?php comboBoxSelectEdit($mysqli, "cabang_gedung", "id", "lokasi", "cabang_gedung", 0, $formCabang, getAnyTampil($mysqli, "lokasi", "cabang_gedung", "id", $formCabang)) ?>
                       </div>
                       <div class="form-group">
@@ -162,7 +160,7 @@ if (!isset($_POST['tampilkan'])) {
                       ?>
                         <tr>
                           <td><?php echo date('Y-m-d H:i:s', strtotime($seconds, strtotime($startTime))) . " " . $zonaWaktu ?></td>
-                          <td><?php echo getAnyTampil($mysqli, 'nama', 'pengguna', 'nomor_induk', $data['nomor_induk']) ?></td>
+                          <td><a href="pengguna.php?nomor_induk=<?php echo $data['nomor_induk'] ?>"><?php echo getAnyTampil($mysqli, 'nama', 'pengguna', 'nomor_induk', $data['nomor_induk']) ?></a></td>
                           <td><?php echo $data['nomor_induk'] ?></td>
                           <td><?php echo $cabang ?></td>
                           <td><?php echo $kategori ?></td>
