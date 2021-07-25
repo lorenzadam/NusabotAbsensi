@@ -14,9 +14,9 @@ if (isset($_POST['ubah'])) {
 }
 
 if (isset($_GET['id'])) {
-  $nama = getAnyTampil($mysqli, 'nama','pengguna','nomor_induk',$_GET['id']);
-  $aktif = getAnyTampil($mysqli, 'aktif','pengguna','nomor_induk',$_GET['id']);
-  if($aktif == 1){
+  $nama = getAnyTampil($mysqli, 'nama', 'pengguna', 'nomor_induk', $_GET['id']);
+  $aktif = getAnyTampil($mysqli, 'aktif', 'pengguna', 'nomor_induk', $_GET['id']);
+  if ($aktif == 1) {
     $aktif = 0;
     $aktifText = "non-aktif";
   } else {
@@ -164,7 +164,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM pengguna");
                     </div>
                     <div class="form-group">
                       <label>Cabang / Gedung</label>
-                      <?php comboBoxSelect($mysqli, 'cabang_gedung', 'id', 'lokasi', 'cabang_gedung', 1) ?>
+                      <?php comboBoxSelect($mysqli, 'cabang_gedung', 'id', 'lokasi', 'cabang_gedung', 0) ?>
                     </div>
                     <div class="form-group">
                       <label>Tag</label>
