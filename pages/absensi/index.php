@@ -90,11 +90,11 @@ if (!isset($_POST['tampilkan'])) {
                       <div class="form-group">
                         <div class="row">
                           <div class="col-3">
-                            <input type="date" name="awal" value="<?php echo $_POST['awal'] ?>" class="form-control">
+                            <input type="date" name="awal" value="<?php echo $_POST['awal'] ?>" class="form-control" required>
                           </div>
                           sampai
                           <div class="col-3">
-                            <input type="date" name="akhir" value="<?php echo $_POST['akhir'] ?>" class="form-control">
+                            <input type="date" name="akhir" value="<?php echo $_POST['akhir'] ?>" class="form-control" required>
                           </div>
                         </div>
                       </div>
