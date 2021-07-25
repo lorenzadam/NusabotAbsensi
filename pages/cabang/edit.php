@@ -6,11 +6,19 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM cabang_gedung w
 
 if ($result[7] == 1) {
     $zona = "WIB";
+    $seconds = "+25200 seconds";
 } elseif ($result[7] == 2) {
     $zona = "WITA";
+    $seconds = "+28800 seconds";
 } elseif ($result[7] == 3) {
     $zona = "WIT";
+    $seconds = "+32400 seconds";
 }
+
+$jam_masuk = date('H:i:s', strtotime($seconds, strtotime(date($result[2]))));
+$istirahat_mulai = date('H:i:s', strtotime($seconds, strtotime(date($result[4]))));
+$istirahat_selesai = date('H:i:s', strtotime($seconds, strtotime(date($result[5]))));
+$jam_pulang = date('H:i:s', strtotime($seconds, strtotime(date($result[3]))));
 ?>
 
 <!DOCTYPE html>
@@ -70,19 +78,19 @@ if ($result[7] == 1) {
                                         </div>
                                         <div class="form-group">
                                             <label>Jam Masuk</label>
-                                            <input type="time" class="form-control" name="jam_masuk" value="<?= $result[2] ?>" required>
+                                            <input type="time" class="form-control" name="jam_masuk" value="<?= $jam_masuk ?>" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Jam Pulang</label>
-                                            <input type="time" class="form-control" name="jam_pulang" value="<?= $result[3] ?>" required>
+                                            <input type="time" class="form-control" name="jam_pulang" value="<?= $jam_pulang ?>" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Mulai Istirahat</label>
-                                            <input type="time" class="form-control" name="istirahat_mulai" value="<?= $result[4] ?>" required>
+                                            <input type="time" class="form-control" name="istirahat_mulai" value="<?= $istirahat_mulai ?>" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Selesai Istirahat</label>
-                                            <input type="time" class="form-control" name="istirahat_selesai" value="<?= $result[5] ?>" required>
+                                            <input type="time" class="form-control" name="istirahat_selesai" value="<?= $istirahat_selesai ?>" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Hari Kerja</label>
