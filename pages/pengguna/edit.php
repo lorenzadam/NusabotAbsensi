@@ -70,7 +70,7 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM pengguna where 
                                         </div>
                                         <div class="form-group">
                                             <label>Cabang / Gedung</label>
-                                            <?php comboBoxSelectEdit($mysqli, 'cabang_gedung', 'id', 'lokasi', 'cabang_gedung', 1, $result[4], getAnyTampil($mysqli, "lokasi", "cabang_gedung", "id", $result[4])) ?>
+                                            <?php comboBoxSelectEdit($mysqli, 'cabang_gedung', 'id', 'lokasi', 'cabang_gedung', 0, $result[4], getAnyTampil($mysqli, "lokasi", "cabang_gedung", "id", $result[4])) ?>
                                         </div>
                                         <div class="form-group">
                                             <label>Tag</label>
