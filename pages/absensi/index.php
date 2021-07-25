@@ -53,6 +53,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM absensi");
                         <th>Absen</th>
                         <th>Nama</th>
                         <th>Nomor Induk</th>
+                        <th>Cabang / Gedung</th>
                         <th>Kategori</th>
                         <th>ID Mesin</th>
                       </tr>
@@ -73,11 +74,25 @@ $result = mysqli_query($mysqli, "SELECT * FROM absensi");
                         if ($data['nomor_induk'] == "") {
                           continue;
                         }
+
+                        $cabang = getAnyTampil($mysqli, "lokasi", "cabang_gedung", "id", getAnyTampil($mysqli,"cabang_gedung","pengguna","nomor_induk",$data['nomor_induk']));
+                        $zona = getAnyTampil($mysqli, "zona_waktu", "cabang_gedung", "id", getAnyTampil($mysqli,"cabang_gedung","pengguna","nomor_induk",$data['nomor_induk']));
+
+                        if($zona == 1){
+                          $seconds = "+25200 seconds";
+                        } else if($zona == 2){
+                          $seconds = "+28800 seconds";
+                        } else {
+                          $seconds = "+32400 seconds";
+                        }
+
+                        $startTime = date($data['absen']);
                       ?>
                         <tr>
-                          <td><?php echo $data['absen'] ?></td>
+                          <td><?php echo date('Y-m-d H:i:s',strtotime($seconds,strtotime($startTime))) ?></td>
                           <td><?php echo getAnyTampil($mysqli, 'nama', 'pengguna', 'nomor_induk', $data['nomor_induk']) ?></td>
                           <td><?php echo $data['nomor_induk'] ?></td>
+                          <td><?php echo $cabang ?></td>
                           <td><?php echo $kategori ?></td>
                           <td><?php echo $data['idmesin'] ?></td>
                         </tr>
@@ -88,6 +103,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM absensi");
                         <th>Absen</th>
                         <th>Nama</th>
                         <th>Nomor Induk</th>
+                        <th>Cabang / Gedung</th>
                         <th>Kategori</th>
                         <th>ID Mesin</th>
                       </tr>
