@@ -16,9 +16,22 @@ if (isset($_GET['tag'])) {
     $nomor_induk = getNomorInduk($mysqli, $tag);
     $kategori = $_GET['kategori'];
 
+    //ambil jam absen maksimal
+    if ($kategori == 1) {
+        $jam_maksimal = getAbsenMaks($mysqli, "jam_masuk", getCabangGedung($mysqli, $tag));
+    } else if ($kategori == 2) {
+        $jam_maksimal = getAbsenMaks($mysqli, "istirahat_mulai", getCabangGedung($mysqli, $tag));
+    } else if ($kategori == 3) {
+        $jam_maksimal = getAbsenMaks($mysqli, "istirahat_selesai", getCabangGedung($mysqli, $tag));
+    } else if ($kategori == 4) {
+        $jam_maksimal = getAbsenMaks($mysqli, "jam_pulang", getCabangGedung($mysqli, $tag));
+    }
+
+    $maksimal = gmdate("Y-m-d $jam_maksimal");
+    
     // Statement SQL
-    $sql = "INSERT INTO absensi (nomor_induk, absen, kategori, idmesin)
-    VALUES ('$nomor_induk','$waktu', '$kategori', '$idmesin')";
+    $sql = "INSERT INTO absensi (nomor_induk, absen, absen_maks, kategori, idmesin)
+    VALUES ('$nomor_induk','$waktu', '$maksimal', '$kategori', '$idmesin')";
 
     $result = mysqli_query($mysqli, $sql);
 
@@ -31,6 +44,20 @@ if (isset($_GET['tag'])) {
 function getNomorInduk($mysqli, $tag)
 {
     $sql = "SELECT nomor_induk FROM pengguna WHERE tag = '$tag'";
+    $result = mysqli_fetch_row(mysqli_query($mysqli, $sql));
+    return $result['0'];
+}
+
+function getCabangGedung($mysqli, $tag)
+{
+    $sql = "SELECT cabang_gedung FROM pengguna WHERE tag = '$tag'";
+    $result = mysqli_fetch_row(mysqli_query($mysqli, $sql));
+    return $result['0'];
+}
+
+function getAbsenMaks($mysqli, $absen, $id)
+{
+    $sql = "SELECT $absen FROM cabang_gedung WHERE id = '$id'";
     $result = mysqli_fetch_row(mysqli_query($mysqli, $sql));
     return $result['0'];
 }
