@@ -4,6 +4,17 @@ if (isset($_GET['nomor_induk'])) {
     require_once("../../etc/config.php");
     require_once("../../etc/function.php");
 
+    //buat array untuk tanggal tidak absen
+    $tanggal1 = array();
+    $tanggal2 = array();
+    $tanggal3 = array();
+    $tanggal4 = array();
+
+    $tanpaAbsenMasuk = array();
+    $tanpaAbsenMulai = array();
+    $tanpaAbsenSelesai = array();
+    $tanpaAbsenPulang = array();
+
     if (!isset($_POST['tampilkan'])) {
         $firstDay = date('Y-m-01');
         $lastDay = date('Y-m-t');
@@ -44,6 +55,21 @@ if (isset($_GET['nomor_induk'])) {
         $valueKategori = $_POST['kategori'];
         $formCabang = $_POST['cabang_gedung'];
     }
+
+    //====masukan array dari tanggal awal sampai akhir (firstDay to lastDay)====/
+    $jumlahHari = dateDifference($firstDay, $lastDay, '%a');
+    $hariIni = date('Y-m-d',  strtotime('-1 day', strtotime($firstDay)));
+
+
+    for ($i = 1; $i <= $jumlahHari; $i++) {
+        array_push($tanpaAbsenMasuk, date('Y-m-d', strtotime('+1 day', strtotime($hariIni))));
+        array_push($tanpaAbsenMulai, date('Y-m-d', strtotime('+1 day', strtotime($hariIni))));
+        array_push($tanpaAbsenSelesai, date('Y-m-d', strtotime('+1 day', strtotime($hariIni))));
+        array_push($tanpaAbsenPulang, date('Y-m-d', strtotime('+1 day', strtotime($hariIni))));
+
+        $hariIni = date('Y-m-d', strtotime('+1 day', strtotime($hariIni)));
+    }
+    //====end====//
 
 
     $terlambatMasuk = 0;
@@ -144,6 +170,8 @@ if (isset($_GET['nomor_induk'])) {
                                                 <?php while ($data = mysqli_fetch_array($result)) {
                                                     $selisih = dateDifference($data['absen'], $data['absen_maks']);
                                                     if ($data['kategori'] == 1) {
+                                                        array_push($tanggal1, date('Y-m-d', strtotime($data['absen_maks'])));
+                                                        $jumlahMasuk = $jumlahMasuk + 1; //hitung jumlah data absen masuk
                                                         $kategori = "Masuk";
                                                         if ($data['absen'] > $data['absen_maks']) {
                                                             $status = "Terlambat";
@@ -155,6 +183,8 @@ if (isset($_GET['nomor_induk'])) {
                                                             $tepatMasuk = $tepatMasuk + $selisih;
                                                         }
                                                     } elseif ($data['kategori'] == 2) {
+                                                        $jumlahMulai = $jumlahMulai + 1; //hitung jumlah data absen mulai istirahat
+                                                        array_push($tanggal2, date('Y-m-d', strtotime($data['absen_maks'])));
                                                         $kategori = "Mulai Istirahat";
                                                         if ($data['absen'] > $data['absen_maks']) {
                                                             $status = "Tepat Waktu";
@@ -166,6 +196,8 @@ if (isset($_GET['nomor_induk'])) {
                                                             $cepatIstirahatMulai = $cepatIstirahatMulai + $selisih;
                                                         }
                                                     } elseif ($data['kategori'] == 3) {
+                                                        $jumlahSelesai = $jumlahSelesai + 1; //hitung jumlah data absen selesai istirahat
+                                                        array_push($tanggal3, date('Y-m-d', strtotime($data['absen_maks'])));
                                                         $kategori = "Selesai Istirahat";
                                                         if ($data['absen'] > $data['absen_maks']) {
                                                             $status = "Terlalu Cepat";
@@ -177,6 +209,8 @@ if (isset($_GET['nomor_induk'])) {
                                                             $tepatIstirahatSelesai = $tepatIstirahatSelesai + $selisih;
                                                         }
                                                     } elseif ($data['kategori'] == 4) {
+                                                        $jumlahPulang = $jumlahPulang + 1; //hitung jumlah data absen pulang
+                                                        array_push($tanggal4, date('Y-m-d', strtotime($data['absen_maks'])));
                                                         $kategori = "Pulang";
                                                         if ($data['absen'] > $data['absen_maks']) {
                                                             $status = "Tepat Waktu";
@@ -356,6 +390,220 @@ if (isset($_GET['nomor_induk'])) {
                                     <!-- /.info-box-content -->
                                 </div>
                                 <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+                            <?php
+                            //====cek tanggal tidak absen===//
+                            //absen masuk
+                            for ($i = 0; $i < $jumlahMasuk; $i++) {
+                                if (($key = array_search($tanggal1[$i], $tanpaAbsenMasuk)) !== false) {
+                                    unset($tanpaAbsenMasuk[$key]);
+                                }
+                            }
+
+                            //absen mulai istirahat
+                            for ($i = 0; $i < $jumlahMulai; $i++) {
+                                if (($key = array_search($tanggal2[$i], $tanpaAbsenMulai)) !== false) {
+                                    unset($tanpaAbsenMulai[$key]);
+                                }
+                            }
+
+                            //absen selesai istirahat
+                            for ($i = 0; $i < $jumlahSelesai; $i++) {
+                                if (($key = array_search($tanggal3[$i], $tanpaAbsenSelesai)) !== false) {
+                                    unset($tanpaAbsenSelesai[$key]);
+                                }
+                            }
+
+                            //absen pulang
+                            for ($i = 0; $i < $jumlahPulang; $i++) {
+                                if (($key = array_search($tanggal4[$i], $tanpaAbsenPulang)) !== false) {
+                                    unset($tanpaAbsenPulang[$key]);
+                                }
+                            }
+                            //====end=====//
+
+                            //atur agar index nya benar
+                            $tanpaAbsenMasuk = array_values($tanpaAbsenMasuk);
+                            $tanpaAbsenMulai = array_values($tanpaAbsenMulai);
+                            $tanpaAbsenSelesai = array_values($tanpaAbsenSelesai);
+                            $tanpaAbsenPulang = array_values($tanpaAbsenPulang);
+                            ?>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="card">
+                                    <div class="card-header border-transparent">
+                                        <h3 class="card-title">Tanpa Absen Masuk</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table m-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    for ($i = 0; $i < count($tanpaAbsenMasuk); $i++) {
+                                                        if (getAnyTampil($mysqli, "tanggal", "cuti", "nomor_induk", $_GET['nomor_induk']) == $tanpaAbsenMasuk[$i]) {
+                                                            $keterangan = "Cuti";
+                                                            $warna = "green";
+                                                        } else if (countRow($mysqli, "libur_khusus", "tanggal", $tanpaAbsenMasuk[$i]) > 0) { //libur khusus
+                                                            //$keterangan = getAnyTampil($mysqli, "keterangan", "libur_khusus", "tanggal", $tanpaAbsenMasuk[$i]);
+                                                            $keterangan = "Libur";
+                                                            $warna = "green";
+                                                        } else {
+                                                            $keterangan = "Tidak Absen";
+                                                            $warna = "black";
+                                                        }
+                                                    ?>
+                                                        <tr>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $tanpaAbsenMasuk[$i]; ?></a></td>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $keterangan; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="card">
+                                    <div class="card-header border-transparent">
+                                        <h3 class="card-title">Tanpa Absen Mulai Istirahat</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table m-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Keterangan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    for ($i = 0; $i < count($tanpaAbsenMulai); $i++) {
+                                                        if (getAnyTampil($mysqli, "tanggal", "cuti", "nomor_induk", $_GET['nomor_induk']) == $tanpaAbsenMulai[$i]) {
+                                                            $keterangan = "Cuti";
+                                                            $warna = "green";
+                                                        } else if (countRow($mysqli, "libur_khusus", "tanggal", $tanpaAbsenMulai[$i]) > 0) { //libur khusus
+                                                            //$keterangan = getAnyTampil($mysqli, "keterangan", "libur_khusus", "tanggal", $tanpaAbsenMulai[$i]);
+                                                            $keterangan = "Libur";
+                                                            $warna = "green";
+                                                        } else {
+                                                            $keterangan = "Tidak Absen";
+                                                            $warna = "black";
+                                                        }
+                                                    ?>
+                                                        <tr>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $tanpaAbsenMulai[$i]; ?></a></td>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $keterangan; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="card">
+                                    <div class="card-header border-transparent">
+                                        <h3 class="card-title">Tanpa Absen Selesai Istirahat</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table m-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Keterangan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                    for ($i = 0; $i < count($tanpaAbsenSelesai); $i++) {
+                                                        if (getAnyTampil($mysqli, "tanggal", "cuti", "nomor_induk", $_GET['nomor_induk']) == $tanpaAbsenSelesai[$i]) {
+                                                            $keterangan = "Cuti";
+                                                            $warna = "green";
+                                                        } else if (countRow($mysqli, "libur_khusus", "tanggal", $tanpaAbsenSelesai[$i]) > 0) { //libur khusus
+                                                            //$keterangan = getAnyTampil($mysqli, "keterangan", "libur_khusus", "tanggal", $tanpaAbsenSelesai[$i]);
+                                                            $keterangan = "Libur";
+                                                            $warna = "green";
+                                                        } else {
+                                                            $keterangan = "Tidak Absen";
+                                                            $warna = "black";
+                                                        }
+                                                    ?>
+                                                        <tr>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $tanpaAbsenSelesai[$i]; ?></a></td>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $keterangan; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="card">
+                                    <div class="card-header border-transparent">
+                                        <h3 class="card-title">Tanpa Absen Pulang</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table m-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Keterangan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                    for ($i = 0; $i < count($tanpaAbsenPulang); $i++) {
+                                                        if (getAnyTampil($mysqli, "tanggal", "cuti", "nomor_induk", $_GET['nomor_induk']) == $tanpaAbsenPulang[$i]) {
+                                                            $keterangan = "Cuti";
+                                                            $warna = "green";
+                                                        } else if (countRow($mysqli, "libur_khusus", "tanggal", $tanpaAbsenPulang[$i]) > 0) { //libur khusus
+                                                            //$keterangan = getAnyTampil($mysqli, "keterangan", "libur_khusus", "tanggal", $tanpaAbsenPulang[$i]);
+                                                            $keterangan = "Libur";
+                                                            $warna = "green";
+                                                        } else {
+                                                            $keterangan = "Tidak Absen";
+                                                            $warna = "black";
+                                                        }
+                                                    ?>
+                                                        <tr>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $tanpaAbsenPulang[$i]; ?></a></td>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $keterangan; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
                             </div>
                             <!-- /.col -->
                         </div>

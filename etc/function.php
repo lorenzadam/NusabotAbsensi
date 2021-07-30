@@ -6,7 +6,7 @@ function getAnyTampil($mysqli, $tampil, $tabel, $where, $valueWhere)
 {
     $result = mysqli_fetch_row(mysqli_query($mysqli, "SELECT $tampil FROM $tabel where $where = $valueWhere"));
 
-    return $result['0'];
+    return $result[0];
 }
 
 function comboBoxSelect($mysqli, $name, $id, $tampil, $tabel, $ignore)
@@ -47,4 +47,12 @@ function dateDifference($date_1 , $date_2 , $differenceFormat = '%i' )
    
     return $interval->format($differenceFormat);
    
+}
+
+function countRow($mysqli, $tabel, $where, $valueWhere){
+    $sql="select count(*) from $tabel where $where = '$valueWhere'";
+    $result=mysqli_query($mysqli,$sql);
+    $row=mysqli_fetch_array($result);
+
+    return $row[0];
 }
