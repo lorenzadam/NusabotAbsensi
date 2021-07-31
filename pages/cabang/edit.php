@@ -93,33 +93,33 @@ $jam_pulang = date('H:i:s', strtotime($seconds, strtotime(date($result[3]))));
                                             <input type="time" class="form-control" name="istirahat_selesai" value="<?= $istirahat_selesai ?>" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Hari Kerja</label>
+                                            <label>Hari Libur</label>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_kerja[]" <?php if (strstr($result[6], '1')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_libur[]" <?php if (strstr($result[6], '1')) echo "checked"; ?>>
                                                 <label for="senin" class="custom-control-label">Senin</label>
                                             </div>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="selasa" value="2" name="hari_kerja[]" <?php if (strstr($result[6], '2')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="selasa" value="2" name="hari_libur[]" <?php if (strstr($result[6], '2')) echo "checked"; ?>>
                                                 <label for="selasa" class="custom-control-label">Selasa</label>
                                             </div>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="rabu" value="3" name="hari_kerja[]" <?php if (strstr($result[6], '3')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="rabu" value="3" name="hari_libur[]" <?php if (strstr($result[6], '3')) echo "checked"; ?>>
                                                 <label for="rabu" class="custom-control-label">Rabu</label>
                                             </div>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="kamis" value="4" name="hari_kerja[]" <?php if (strstr($result[6], '4')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="kamis" value="4" name="hari_libur[]" <?php if (strstr($result[6], '4')) echo "checked"; ?>>
                                                 <label for="kamis" class="custom-control-label">Kamis</label>
                                             </div>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="jumat" value="5" name="hari_kerja[]" <?php if (strstr($result[6], '5')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="jumat" value="5" name="hari_libur[]" <?php if (strstr($result[6], '5')) echo "checked"; ?>>
                                                 <label for="jumat" class="custom-control-label">Jumat</label>
                                             </div>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_kerja[]" <?php if (strstr($result[6], '6')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_libur[]" <?php if (strstr($result[6], '6')) echo "checked"; ?>>
                                                 <label for="sabtu" class="custom-control-label">Sabtu</label>
                                             </div>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_kerja[]" <?php if (strstr($result[6], '7')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_libur[]" <?php if (strstr($result[6], '7')) echo "checked"; ?>>
                                                 <label for="minggu" class="custom-control-label">Minggu</label>
                                             </div>
                                         </div>

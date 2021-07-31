@@ -533,7 +533,7 @@ if (isset($_GET['nomor_induk'])) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php
+                                                    <?php
                                                     for ($i = 0; $i < count($tanpaAbsenSelesai); $i++) {
                                                         if (getAnyTampil($mysqli, "tanggal", "cuti", "nomor_induk", $_GET['nomor_induk']) == $tanpaAbsenSelesai[$i]) {
                                                             $keterangan = "Cuti";
@@ -577,7 +577,7 @@ if (isset($_GET['nomor_induk'])) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php
+                                                    <?php
                                                     for ($i = 0; $i < count($tanpaAbsenPulang); $i++) {
                                                         if (getAnyTampil($mysqli, "tanggal", "cuti", "nomor_induk", $_GET['nomor_induk']) == $tanpaAbsenPulang[$i]) {
                                                             $keterangan = "Cuti";

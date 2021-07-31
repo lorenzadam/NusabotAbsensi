@@ -16,17 +16,17 @@ if (isset($_POST['tambah'])) {
   $istirahat_selesai = date('H:i:s', strtotime($seconds, strtotime(date($_POST['istirahat_selesai']))));
   $jam_pulang = date('H:i:s', strtotime($seconds, strtotime(date($_POST['jam_pulang']))));
 
-  $hari_kerja = $_POST['hari_kerja'];
+  $hari_libur = $_POST['hari_libur'];
   $pilihan_kerja = "";
-  for ($i = 0; $i < count($hari_kerja); $i++) {
-    if ($i == count($hari_kerja) - 1) {
-      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i];
+  for ($i = 0; $i < count($hari_libur); $i++) {
+    if ($i == count($hari_libur) - 1) {
+      $pilihan_kerja = $pilihan_kerja . $hari_libur[$i];
     } else {
-      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i] . ",";
+      $pilihan_kerja = $pilihan_kerja . $hari_libur[$i] . ",";
     }
   }
 
-  $result = mysqli_query($mysqli, "INSERT INTO cabang_gedung(lokasi,jam_masuk,jam_pulang,istirahat_mulai,istirahat_selesai,hari_kerja,zona_waktu) VALUES('{$_POST['lokasi']}','$jam_masuk','$jam_pulang','$istirahat_mulai','$istirahat_selesai','$pilihan_kerja','{$_POST['zona_waktu']}')");
+  $result = mysqli_query($mysqli, "INSERT INTO cabang_gedung(lokasi,jam_masuk,jam_pulang,istirahat_mulai,istirahat_selesai,hari_libur,zona_waktu) VALUES('{$_POST['lokasi']}','$jam_masuk','$jam_pulang','$istirahat_mulai','$istirahat_selesai','$pilihan_kerja','{$_POST['zona_waktu']}')");
   $successAdd = 1;
 }
 
@@ -45,17 +45,17 @@ if (isset($_POST['ubah'])) {
   $jam_pulang = date('H:i:s', strtotime($seconds, strtotime(date($_POST['jam_pulang']))));
 
 
-  $hari_kerja = $_POST['hari_kerja'];
+  $hari_libur = $_POST['hari_libur'];
   $pilihan_kerja = "";
-  for ($i = 0; $i < count($hari_kerja); $i++) {
-    if ($i == count($hari_kerja) - 1) {
-      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i];
+  for ($i = 0; $i < count($hari_libur); $i++) {
+    if ($i == count($hari_libur) - 1) {
+      $pilihan_kerja = $pilihan_kerja . $hari_libur[$i];
     } else {
-      $pilihan_kerja = $pilihan_kerja . $hari_kerja[$i] . ",";
+      $pilihan_kerja = $pilihan_kerja . $hari_libur[$i] . ",";
     }
   }
 
-  $result = mysqli_query($mysqli, "UPDATE cabang_gedung SET lokasi='{$_POST['lokasi']}',jam_masuk='$jam_masuk',jam_pulang='$jam_pulang',istirahat_mulai='$istirahat_mulai',istirahat_selesai='$istirahat_selesai',hari_kerja='$pilihan_kerja',zona_waktu='{$_POST['zona_waktu']}' WHERE id='{$_POST['id']}'");
+  $result = mysqli_query($mysqli, "UPDATE cabang_gedung SET lokasi='{$_POST['lokasi']}',jam_masuk='$jam_masuk',jam_pulang='$jam_pulang',istirahat_mulai='$istirahat_mulai',istirahat_selesai='$istirahat_selesai',hari_libur='$pilihan_kerja',zona_waktu='{$_POST['zona_waktu']}' WHERE id='{$_POST['id']}'");
   $successEdit = 1;
 }
 
@@ -145,7 +145,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                         <th>Pulang</th>
                         <th>Mulai Istirahat</th>
                         <th>Selesai Istirahat</th>
-                        <th>Hari Kerja</th>
+                        <th>Hari Libur</th>
                         <th>Zona Waktu</th>
                         <th>Aktif</th>
                         <th>Aksi</th>
@@ -185,7 +185,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                           <td><?php echo $jam_pulang ?></td>
                           <td><?php echo $istirahat_mulai ?></td>
                           <td><?php echo $istirahat_selesai ?></td>
-                          <td><?php echo $data['hari_kerja'] ?></td>
+                          <td><?php echo $data['hari_libur'] ?></td>
                           <td><?php echo $zona ?></td>
                           <td><?php echo $aktif ?></td>
                           <td><a href="edit.php?id=<?= $data['id'] ?>"><i class="fas fa-edit"></i></a> | <a href="index.php?id=<?= $data['id'] ?>"><i class="fas fa-minus-circle"></i></a></td>
@@ -199,7 +199,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                         <th>Pulang</th>
                         <th>Mulai Istirahat</th>
                         <th>Selesai Istirahat</th>
-                        <th>Hari Kerja</th>
+                        <th>Hari Libur</th>
                         <th>Zona Waktu</th>
                         <th>Aktif</th>
                         <th>Aksi</th>
@@ -239,33 +239,33 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                       <input type="time" name="istirahat_selesai" class="form-control" required>
                     </div>
                     <div class="form-group">
-                      <label>Hari Kerja</label>
+                      <label>Hari Libur</label>
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_kerja[]">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_libur[]">
                         <label for="senin" class="custom-control-label">Senin</label>
                       </div>
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="selasa" value="2" name="hari_kerja[]">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="selasa" value="2" name="hari_libur[]">
                         <label for="selasa" class="custom-control-label">Selasa</label>
                       </div>
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="rabu" value="3" name="hari_kerja[]">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="rabu" value="3" name="hari_libur[]">
                         <label for="rabu" class="custom-control-label">Rabu</label>
                       </div>
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="kamis" value="4" name="hari_kerja[]">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="kamis" value="4" name="hari_libur[]">
                         <label for="kamis" class="custom-control-label">Kamis</label>
                       </div>
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="jumat" value="5" name="hari_kerja[]">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="jumat" value="5" name="hari_libur[]">
                         <label for="jumat" class="custom-control-label">Jumat</label>
                       </div>
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_kerja[]">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_libur[]">
                         <label for="sabtu" class="custom-control-label">Sabtu</label>
                       </div>
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_kerja[]">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_libur[]">
                         <label for="minggu" class="custom-control-label">Minggu</label>
                       </div>
                     </div>
