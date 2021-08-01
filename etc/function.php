@@ -38,21 +38,33 @@ function comboBoxSelectEdit($mysqli, $name, $id, $tampil, $tabel, $ignore, $valu
     echo '</select>';
 }
 
-function dateDifference($date_1 , $date_2 , $differenceFormat = '%i' )
+function dateDifference($date_1, $date_2, $differenceFormat = '%i')
 {
     $datetime1 = date_create($date_1);
     $datetime2 = date_create($date_2);
-   
+
     $interval = date_diff($datetime1, $datetime2);
-   
+
     return $interval->format($differenceFormat);
-   
 }
 
-function countRow($mysqli, $tabel, $where, $valueWhere){
-    $sql="select count(*) from $tabel where $where = '$valueWhere'";
-    $result=mysqli_query($mysqli,$sql);
-    $row=mysqli_fetch_array($result);
+function countRow($mysqli, $tabel, $where, $valueWhere)
+{
+    $sql = "select count(*) from $tabel where $where = '$valueWhere'";
+    $result = mysqli_query($mysqli, $sql);
+    $row = mysqli_fetch_array($result);
 
     return $row[0];
+}
+
+function gethariLibur($mysqli, $nomor_induk)
+{
+    $sql = "SELECT cabang_gedung.hari_libur
+    FROM cabang_gedung
+    INNER JOIN pengguna ON cabang_gedung.id = pengguna.cabang_gedung
+    WHERE pengguna.nomor_induk = '$nomor_induk'";
+
+    $result = mysqli_fetch_row(mysqli_query($mysqli, $sql));
+
+    return $result[0];
 }
