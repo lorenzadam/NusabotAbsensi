@@ -20,7 +20,7 @@ if (isset($_GET['nomor_induk'])) {
     //ambil hari libur
     $hariLibur = gethariLibur($mysqli, $_GET['nomor_induk']);
     $array_hariLibur = explode(",", $hariLibur);
-    $count_hariLibur = count($array_hariLibur);
+    array_unshift($array_hariLibur,""); //tidak tahu kenapa search dimulai dari index 1, maka dari itu index 0 harus diisi. Nantinya akan digunakan untuk mengambil bukan hari kerja
 
     if (!isset($_POST['tampilkan'])) {
         $firstDay = date('Y-m-01');
@@ -67,8 +67,16 @@ if (isset($_GET['nomor_induk'])) {
     $jumlahHari = dateDifference($firstDay, $lastDay, '%a');
     $hariIni = date('Y-m-d',  strtotime('-1 day', strtotime($firstDay)));
 
+    //masukan tanggal ke array hari kerja
+    for ($i = 0; $i <= $jumlahHari; $i++) {
+        $nomorHari = date('w', strtotime('+1 day', strtotime($hariIni)));
+        // echo $nomorHari;
 
-    for ($i = 1; $i <= $jumlahHari; $i++) {
+        if (array_search($nomorHari, $array_hariLibur) == true) {
+            $hariIni = date('Y-m-d', strtotime('+1 day', strtotime($hariIni)));
+            continue;
+        }
+
         array_push($tanpaAbsenMasuk, date('Y-m-d', strtotime('+1 day', strtotime($hariIni))));
         array_push($tanpaAbsenMulai, date('Y-m-d', strtotime('+1 day', strtotime($hariIni))));
         array_push($tanpaAbsenSelesai, date('Y-m-d', strtotime('+1 day', strtotime($hariIni))));
@@ -409,31 +417,22 @@ if (isset($_GET['nomor_induk'])) {
                             </div>
                             <!-- /.col -->
                             <?php
+
                             //====cek tanggal tidak absen===//
                             //absen masuk
-                            for ($i = 0; $i < $jumlahData; $i++) {
+                            for ($i = 0; $i < $jumlahMasuk; $i++) {
                                 if (($key = array_search($tanggal1[$i], $tanpaAbsenMasuk)) !== false) {
                                     unset($tanpaAbsenMasuk[$key]);
                                 }
-                                //hari libur
-                                for ($j = 0; $j < $count_hariLibur; $j++) {
-                                    if (date('w', strtotime($tanpaAbsenMasuk[$i])) == $array_hariLibur[$j]) {
-                                        unset($tanpaAbsenMasuk[$i]);
-                                    }
-                                }
                             }
+                            $tanpaAbsenMasuk = array_values($tanpaAbsenMasuk); //agar nomor index benar
 
                             //absen mulai istirahat
                             for ($i = 0; $i < $jumlahMulai; $i++) {
                                 if (($key = array_search($tanggal2[$i], $tanpaAbsenMulai)) !== false) {
                                     unset($tanpaAbsenMulai[$key]);
                                 }
-                                //hari libur
-                                for ($j = 0; $j < $count_hariLibur; $j++) {
-                                    if (date('w', strtotime($tanpaAbsenMulai[$i])) == $array_hariLibur[$j]) {
-                                        unset($tanpaAbsenMulai[$i]);
-                                    }
-                                }
+                                $tanpaAbsenMulai = array_values($tanpaAbsenMulai); //agar nomor index benar
                             }
 
                             //absen selesai istirahat
@@ -441,12 +440,7 @@ if (isset($_GET['nomor_induk'])) {
                                 if (($key = array_search($tanggal3[$i], $tanpaAbsenSelesai)) !== false) {
                                     unset($tanpaAbsenSelesai[$key]);
                                 }
-                                //hari libur
-                                for ($j = 0; $j < $count_hariLibur; $j++) {
-                                    if (date('w', strtotime($tanpaAbsenSelesai[$i])) == $array_hariLibur[$j]) {
-                                        unset($tanpaAbsenSelesai[$i]);
-                                    }
-                                }
+                                $tanpaAbsenSelesai = array_values($tanpaAbsenSelesai); //agar nomor index benar
                             }
 
                             //absen pulang
@@ -454,20 +448,9 @@ if (isset($_GET['nomor_induk'])) {
                                 if (($key = array_search($tanggal4[$i], $tanpaAbsenPulang)) !== false) {
                                     unset($tanpaAbsenPulang[$key]);
                                 }
-                                //hari libur
-                                for ($j = 0; $j < $count_hariLibur; $j++) {
-                                    if (date('w', strtotime($tanpaAbsenPulang[$i])) == $array_hariLibur[$j]) {
-                                        unset($tanpaAbsenPulang[$i]);
-                                    }
-                                }
+                                $tanpaAbsenPulang = array_values($tanpaAbsenPulang); //agar nomor index benar
                             }
                             //====end=====//
-
-                            //atur agar index nya benar
-                            $tanpaAbsenMasuk = array_values($tanpaAbsenMasuk);
-                            $tanpaAbsenMulai = array_values($tanpaAbsenMulai);
-                            $tanpaAbsenSelesai = array_values($tanpaAbsenSelesai);
-                            $tanpaAbsenPulang = array_values($tanpaAbsenPulang);
                             ?>
                             <div class="col-12 col-sm-6 col-md-3">
                                 <div class="card">
@@ -486,32 +469,31 @@ if (isset($_GET['nomor_induk'])) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    for ($i = 0; $i < count($tanpaAbsenMasuk); $i++) {
+                                                    for ($hasilMasuk = 0; $hasilMasuk < count($tanpaAbsenMasuk); $hasilMasuk++) {
                                                         //====Default tanpa absen====//
                                                         $keterangan = "Tidak Absen";
                                                         $warna = "black";
                                                         //====End====//
-
                                                         //set cuti
                                                         for ($k = 0; $k < count($cuti); $k++) {
-                                                            if ($tanpaAbsenMasuk[$i] == $cuti[$k]) {
+                                                            if ($tanpaAbsenMasuk[$hasilMasuk] == $cuti[$k]) {
                                                                 $keterangan = "Cuti";
                                                                 $warna = "green";
                                                             }
                                                         }
 
                                                         //set jika hari libur
-                                                        if (countRow($mysqli, "libur_khusus", "tanggal", $tanpaAbsenMasuk[$i]) > 0) { //libur khusus
+                                                        if (countRow($mysqli, "libur_khusus", "tanggal", $tanpaAbsenMasuk[$hasilMasuk]) > 0) { //libur khusus
                                                             //$keterangan = getAnyTampil($mysqli, "keterangan", "libur_khusus", "tanggal", $tanpaAbsenPulang[$i]);
                                                             $keterangan = "Libur";
                                                             $warna = "green";
                                                         }
                                                     ?>
                                                         <tr>
-                                                            <td style="color: <?php echo $warna ?>;"><?php echo $tanpaAbsenMasuk[$i]; ?></a></td>
+                                                            <td style="color: <?php echo $warna ?>;"><?php echo $tanpaAbsenMasuk[$hasilMasuk]; ?></a></td>
                                                             <td style="color: <?php echo $warna ?>;"><?php echo $keterangan; ?></td>
                                                         </tr>
-                                                    <?php } ?>
+                                                    <?php  } ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -537,13 +519,12 @@ if (isset($_GET['nomor_induk'])) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php
+                                                    <?php
                                                     for ($i = 0; $i < count($tanpaAbsenMulai); $i++) {
                                                         //====Default tanpa absen====//
                                                         $keterangan = "Tidak Absen";
                                                         $warna = "black";
                                                         //====End====//
-
                                                         //set cuti
                                                         for ($k = 0; $k < count($cuti); $k++) {
                                                             if ($tanpaAbsenMulai[$i] == $cuti[$k]) {
@@ -589,7 +570,7 @@ if (isset($_GET['nomor_induk'])) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php
+                                                    <?php
                                                     for ($i = 0; $i < count($tanpaAbsenSelesai); $i++) {
                                                         //====Default tanpa absen====//
                                                         $keterangan = "Tidak Absen";
@@ -641,7 +622,7 @@ if (isset($_GET['nomor_induk'])) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php
+                                                    <?php
                                                     for ($i = 0; $i < count($tanpaAbsenPulang); $i++) {
                                                         //====Default tanpa absen====//
                                                         $keterangan = "Tidak Absen";
