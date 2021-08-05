@@ -241,6 +241,10 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                     <div class="form-group">
                       <label>Hari Libur</label>
                       <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="0" name="hari_libur[]">
+                        <label for="minggu" class="custom-control-label">Minggu</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
                         <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_libur[]">
                         <label for="senin" class="custom-control-label">Senin</label>
                       </div>
@@ -263,10 +267,6 @@ $result = mysqli_query($mysqli, "SELECT * FROM cabang_gedung");
                       <div class="custom-control custom-checkbox">
                         <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_libur[]">
                         <label for="sabtu" class="custom-control-label">Sabtu</label>
-                      </div>
-                      <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_libur[]">
-                        <label for="minggu" class="custom-control-label">Minggu</label>
                       </div>
                     </div>
                     <div class="form-group">

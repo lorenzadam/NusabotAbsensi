@@ -95,6 +95,10 @@ $jam_pulang = date('H:i:s', strtotime($seconds, strtotime(date($result[3]))));
                                         <div class="form-group">
                                             <label>Hari Libur</label>
                                             <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="0" name="hari_libur[]" <?php if (strstr($result[6], '7')) echo "checked"; ?>>
+                                                <label for="minggu" class="custom-control-label">Minggu</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
                                                 <input class="custom-control-input custom-control-input-danger" type="checkbox" id="senin" value="1" name="hari_libur[]" <?php if (strstr($result[6], '1')) echo "checked"; ?>>
                                                 <label for="senin" class="custom-control-label">Senin</label>
                                             </div>
@@ -117,10 +121,6 @@ $jam_pulang = date('H:i:s', strtotime($seconds, strtotime(date($result[3]))));
                                             <div class="custom-control custom-checkbox">
                                                 <input class="custom-control-input custom-control-input-danger" type="checkbox" id="sabtu" value="6" name="hari_libur[]" <?php if (strstr($result[6], '6')) echo "checked"; ?>>
                                                 <label for="sabtu" class="custom-control-label">Sabtu</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="7" name="hari_libur[]" <?php if (strstr($result[6], '7')) echo "checked"; ?>>
-                                                <label for="minggu" class="custom-control-label">Minggu</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
