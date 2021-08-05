@@ -95,7 +95,7 @@ $jam_pulang = date('H:i:s', strtotime($seconds, strtotime(date($result[3]))));
                                         <div class="form-group">
                                             <label>Hari Libur</label>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="0" name="hari_libur[]" <?php if (strstr($result[6], '7')) echo "checked"; ?>>
+                                                <input class="custom-control-input custom-control-input-danger" type="checkbox" id="minggu" value="0" name="hari_libur[]" <?php if (strstr($result[6], '0')) echo "checked"; ?>>
                                                 <label for="minggu" class="custom-control-label">Minggu</label>
                                             </div>
                                             <div class="custom-control custom-checkbox">
