@@ -119,7 +119,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM pengguna");
                       ?>
                         <tr>
                           <td><?php echo $data['nomor_induk'] ?></td>
-                          <td><?php echo $data['nama'] ?></td>
+                          <td><a href="../absensi/pengguna.php?nomor_induk=<?php echo $data['nomor_induk'] ?>"><?php echo $data['nama'] ?></a></td>
                           <td><?php echo getAnyTampil($mysqli, "jabatan_status", "jabatan_status", "id", $data['jabatan_status']) ?></td>
                           <td><?php echo getAnyTampil($mysqli, "lokasi", "cabang_gedung", "id", $data['cabang_gedung']) ?></td>
                           <td><?php echo $aktif ?></td>

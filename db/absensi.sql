@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 23 Jul 2021 pada 10.57
+-- Waktu pembuatan: 06 Agu 2021 pada 07.47
 -- Versi server: 10.4.19-MariaDB
 -- Versi PHP: 8.0.7
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `absensi`
+-- Database: `absensi_baru`
 --
 
 -- --------------------------------------------------------
@@ -31,6 +31,7 @@ CREATE TABLE `absensi` (
   `id` int(11) NOT NULL,
   `nomor_induk` char(30) NOT NULL,
   `absen` datetime NOT NULL,
+  `absen_maks` datetime NOT NULL,
   `kategori` char(1) DEFAULT NULL COMMENT '1=jam_masuk, 2=istirahat_mulai, 3=istirahat_selesai, 4=pulang',
   `idmesin` char(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -48,7 +49,7 @@ CREATE TABLE `cabang_gedung` (
   `jam_pulang` time NOT NULL,
   `istirahat_mulai` time NOT NULL,
   `istirahat_selesai` time NOT NULL,
-  `hari_kerja` char(15) NOT NULL,
+  `hari_libur` char(15) NOT NULL,
   `zona_waktu` char(1) NOT NULL,
   `aktif` char(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -57,10 +58,8 @@ CREATE TABLE `cabang_gedung` (
 -- Dumping data untuk tabel `cabang_gedung`
 --
 
-INSERT INTO `cabang_gedung` (`id`, `lokasi`, `jam_masuk`, `jam_pulang`, `istirahat_mulai`, `istirahat_selesai`, `hari_kerja`, `zona_waktu`, `aktif`) VALUES
-(0, 'mainland', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '1,2,3,4,5,6,7', '1', '1'),
-(2, 'Kantor Pusat', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '1,2,3,4,5', '1', '1'),
-(3, 'Kantor Cabang 1', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '1,2,3,4,5', '1', '1');
+INSERT INTO `cabang_gedung` (`id`, `lokasi`, `jam_masuk`, `jam_pulang`, `istirahat_mulai`, `istirahat_selesai`, `hari_libur`, `zona_waktu`, `aktif`) VALUES
+(0, 'mainland', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '1,2,3,4,5,6,7', '1', '1');
 
 -- --------------------------------------------------------
 
@@ -73,14 +72,6 @@ CREATE TABLE `cuti` (
   `nomor_induk` char(30) NOT NULL,
   `tanggal` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `cuti`
---
-
-INSERT INTO `cuti` (`id`, `nomor_induk`, `tanggal`) VALUES
-(8, '1234567', '2021-07-05'),
-(9, '987654', '2021-07-06');
 
 -- --------------------------------------------------------
 
@@ -137,13 +128,6 @@ CREATE TABLE `libur_khusus` (
   `keterangan` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `libur_khusus`
---
-
-INSERT INTO `libur_khusus` (`id`, `tanggal`, `keterangan`) VALUES
-(4, '2021-07-05', 'Libur Nasional');
-
 -- --------------------------------------------------------
 
 --
@@ -165,9 +149,7 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`nomor_induk`, `nama`, `tag`, `jabatan_status`, `cabang_gedung`, `password`, `aktif`) VALUES
-('0', 'Nusabot.id', '', '0', '1', '4ede6485b0e3ab3cef9c119c62593f58', '1'),
-('1234567', 'Wiku', 'e69b26f9', '3', '3', 'fcea920f7412b5da7be0cf42b8c93759', '1'),
-('987654', 'Adam Damara', '6668689', '2', '2', '6c44e5cd17f0019c64b042e4a745412a', '1');
+('0', 'Nusabot.id', '', '0', '0', '2dcca9cf0a56e9f1cd2141d6df458f62', '1');
 
 --
 -- Indexes for dumped tables
@@ -229,13 +211,13 @@ ALTER TABLE `absensi`
 -- AUTO_INCREMENT untuk tabel `cabang_gedung`
 --
 ALTER TABLE `cabang_gedung`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `cuti`
 --
 ALTER TABLE `cuti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `jabatan_status`
@@ -247,7 +229,7 @@ ALTER TABLE `jabatan_status`
 -- AUTO_INCREMENT untuk tabel `libur_khusus`
 --
 ALTER TABLE `libur_khusus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
