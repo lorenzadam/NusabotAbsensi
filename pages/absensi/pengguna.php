@@ -20,7 +20,7 @@ if (isset($_GET['nomor_induk'])) {
     //ambil hari libur
     $hariLibur = gethariLibur($mysqli, $_GET['nomor_induk']);
     $array_hariLibur = explode(",", $hariLibur);
-    array_unshift($array_hariLibur,""); //tidak tahu kenapa search dimulai dari index 1, maka dari itu index 0 harus diisi. Nantinya akan digunakan untuk mengambil bukan hari kerja
+    array_unshift($array_hariLibur, ""); //tidak tahu kenapa search dimulai dari index 1, maka dari itu index 0 harus diisi. Nantinya akan digunakan untuk mengambil bukan hari kerja
 
     if (!isset($_POST['tampilkan'])) {
         $firstDay = date('Y-m-01');
@@ -660,7 +660,8 @@ if (isset($_GET['nomor_induk'])) {
                             </div>
                             <!-- /.col -->
                         </div>
-                    </div>
+
+                        
                     <!-- /.container-fluid -->
                 </section>
                 <!-- /.content -->
