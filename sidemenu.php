@@ -44,6 +44,12 @@
                   <p>Cabang / Gedung</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="pages/denda" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Denda</p>
+                </a>
+              </li>
             </ul>
           </li>
         </ul>
