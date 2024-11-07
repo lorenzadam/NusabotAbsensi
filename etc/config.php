@@ -2,6 +2,8 @@
 /**
  * using mysqli_connect for database connection
  */
+
+error_reporting(E_ERROR | E_PARSE);
  
 $databaseHost = 'localhost';
 $databaseName = 'absensi';
