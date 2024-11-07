@@ -5,7 +5,7 @@ if (isset($_GET['tag'])) {
 
     //Variabel basis data
     $databaseHost = 'localhost';
-    $databaseName = 'absensi';
+    $databaseName = 'absen';
     $databaseUsername = 'root';
     $databasePassword = '';
 
