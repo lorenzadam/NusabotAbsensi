@@ -1,36 +1,40 @@
 <?php
-$target_dir = "../../dist/img/";
+// Set direktori tujuan penyimpanan file
+$target_dir = "../../dist/img/"; // Pastikan direktori ini ada dan dapat ditulisi oleh server
 $uploadOk = 1;
 
 if (isset($_POST["upload_logo"])) {
     $target_file = $target_dir . basename($_FILES["logo"]["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
+    // Periksa apakah file benar-benar gambar
     $check = getimagesize($_FILES["logo"]["tmp_name"]);
     if ($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
         $uploadOk = 1;
     } else {
         echo "File is not an image.";
         $uploadOk = 0;
     }
 
+    // Periksa apakah file sudah ada di folder
     if (file_exists($target_file)) {
         echo "Sorry, file already exists.";
         $uploadOk = 0;
     }
 
+    // Batasi jenis file yang boleh di-upload
     if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
         echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         $uploadOk = 0;
     }
 
-    // Periksa ukuran file (misal, maksimum 2MB)
-    if ($_FILES["logo"]["size"] > 2000000) {
+    // Batasi ukuran file (maksimum 10MB)
+    if ($_FILES["logo"]["size"] > 10000000) {
         echo "Sorry, your file is too large.";
         $uploadOk = 0;
     }
 
+    // Jika semua pengecekan lolos, coba upload file
     if ($uploadOk == 1) {
         if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_file)) {
             echo "The file ". htmlspecialchars(basename($_FILES["logo"]["name"])) . " telah diunggah.";
@@ -42,6 +46,7 @@ if (isset($_POST["upload_logo"])) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
