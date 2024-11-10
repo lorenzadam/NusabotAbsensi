@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengaturan Sistem</title>
-    <!-- Menyertakan Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -18,7 +17,7 @@
 
     // Set direktori tujuan penyimpanan file
     $target_dir = "../../dist/img/";
-    $target_file = $target_dir . "logo.png"; // Nama file akan selalu menjadi "logo.png"
+    $target_file = $target_dir . "logo.png"; // Nama file tetap "logo.png"
     $uploadOk = 1;
 
     if (isset($_POST["upload_logo"])) {
@@ -49,14 +48,9 @@
         }
 
         if ($uploadOk == 1) {
-            // Hapus file lama jika ada, untuk menggantinya dengan yang baru
-            if (file_exists($target_file)) {
-                unlink($target_file);
-            }
-
-            // Upload file dengan nama tetap "logo.png"
+            // Upload file dan timpa logo.png yang sudah ada
             if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_file)) {
-                $uploadMessage = "Logo berhasil diubah!";
+                $uploadMessage = "Logo berhasil diunggah sebagai logo.png!";
                 $alertType = "success";
             } else {
                 $uploadMessage = "Maaf, terjadi kesalahan saat mengunggah logo.";

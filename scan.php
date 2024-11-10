@@ -44,7 +44,7 @@ if (isset($_POST['tag'])) {
         <div class="lockscreen-item">
             <!-- lockscreen image -->
             <div class="lockscreen-image">
-                <img src="dist/img/logo-me.png" alt="User Image">
+                <img src="dist/img/logo.png" alt="User Image">
             </div>
             <!-- /.lockscreen-image -->
 
