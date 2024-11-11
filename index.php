@@ -14,11 +14,10 @@ include('session.php');
 
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-      <!-- Brand Logo -->
-      <a href="index.php" class="brand-link">
-        <img src="dist/img/logo-white.png" alt="Nusabot Logo" width="30%">
-      </a>
-
+    <!-- Brand Logo -->
+    <a href="index.php" class="brand-link">
+        <img src="dist/img/logo.png" alt="Nusabot Logo" width="30%">
+    </a>
       <!-- Sidebar -->
       <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
