@@ -1,41 +1,137 @@
+<?php
+require_once("../../etc/config.php");  
+require_once("../../etc/function.php"); 
+
+// Mengambil daftar cabang/gedung dari database
+$cabangGedungList = [];
+$lokasiCabang = "Semua Cabang";
+$result = mysqli_query($mysqli, "SELECT id, lokasi FROM cabang_gedung");
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $cabangGedungList[] = $row;
+    }
+}
+
+// Inisialisasi variabel data absensi
+$tepatWaktu = array_fill(0, 12, 0);
+$terlambat = array_fill(0, 12, 0);
+
+// Mengecek jika ada pilihan cabang/gedung
+$cabangGedungId = isset($_GET['cabangGedung']) ? (int)$_GET['cabangGedung'] : null;
+
+// Query untuk mengambil data absensi berdasarkan cabang/gedung yang dipilih
+if ($cabangGedungId) {
+    $result = mysqli_query($mysqli, "
+        SELECT MONTH(absensi.absen) AS bulan,
+               SUM(CASE WHEN absensi.kategori = '1' THEN 1 ELSE 0 END) AS tepat_waktu,
+               SUM(CASE WHEN absensi.kategori = '2' THEN 1 ELSE 0 END) AS terlambat
+        FROM absensi
+        WHERE absensi.id_cabang = $cabangGedungId
+        GROUP BY MONTH(absensi.absen)
+    ");
+
+    // Mendapatkan nama lokasi untuk cabang yang dipilih
+    $lokasiResult = mysqli_query($mysqli, "SELECT lokasi FROM cabang_gedung WHERE id = $cabangGedungId");
+    if ($lokasiResult) {
+        $lokasiRow = mysqli_fetch_assoc($lokasiResult);
+        $lokasiCabang = $lokasiRow['lokasi'];
+    }
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $bulanIndex = (int)$row['bulan'] - 1;
+            $tepatWaktu[$bulanIndex] = (int)$row['tepat_waktu'];
+            $terlambat[$bulanIndex] = (int)$row['terlambat'];
+        }
+    }
+}
+?>
+<style>
+  .form-container {
+    width: 80%;
+    margin: auto;
+    padding-top: 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
+  .form-container label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+  }
+
+  .form-container select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .form-container select:hover,
+  .form-container select:focus {
+    border-color: #5c90d2;
+    box-shadow: 0 0 5px rgba(92, 144, 210, 0.5);
+  }
+</style>
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Attendance and Leave Charts</title>
-  <!-- Link ke Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-  <!-- Chart 1: Jumlah Hadir dan Terlambat Masuk -->
+  <!-- Form Pilihan Cabang/Gedung -->
+  <div class="form-container">
+  <form method="GET" action="">
+    <label for="cabangGedung">Pilih Cabang/Gedung:</label>
+    <select name="cabangGedung" id="cabangGedung" onchange="this.form.submit()">
+      <option value="">-- Semua Cabang --</option>
+      <?php foreach ($cabangGedungList as $cabang): ?>
+        <option value="<?php echo $cabang['id']; ?>" <?php echo ($cabangGedungId == $cabang['id']) ? 'selected' : ''; ?>>
+          <?php echo $cabang['lokasi']; ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </form>
+</div>
+
+  <!-- Chart: Jumlah Tepat Waktu dan Terlambat per Bulan -->
   <div style="width: 80%; margin: auto; padding-top: 50px;">
     <canvas id="attendanceChart"></canvas>
   </div>
 
-  <!-- Chart 2: Jumlah Cuti Per Bulan -->
-  <div style="width: 80%; margin: auto; padding-top: 50px;">
-    <canvas id="leaveChart"></canvas>
-  </div>
-
-  <!-- Script untuk Kedua Chart -->
   <script>
-    // Data untuk Chart 1: Jumlah Hadir dan Terlambat Masuk
+    // Data dari PHP untuk Chart
+    const tepatWaktu = <?php echo json_encode($tepatWaktu); ?>;
+    const terlambat = <?php echo json_encode($terlambat); ?>;
+    const lokasiCabang = "<?php echo $lokasiCabang; ?>";
+
+    // Data untuk Chart: Jumlah Tepat Waktu dan Terlambat per Bulan
     const attendanceData = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       datasets: [
         {
-          label: 'Jumlah Hadir',
+          label: 'Jumlah Tepat Waktu',
           backgroundColor: 'rgba(75, 192, 192, 0.5)',
           borderColor: 'rgba(75, 192, 192, 1)',
-          data: [10, 15, 12, 14, 13, 9, 11, 14, 16, 12, 14, 15],
+          data: tepatWaktu,
         },
         {
           label: 'Jumlah Terlambat',
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
           borderColor: 'rgba(255, 99, 132, 1)',
-          data: [3, 2, 4, 1, 3, 2, 5, 2, 3, 4, 1, 2],
+          data: terlambat,
         }
       ]
     };
@@ -48,51 +144,17 @@
         },
         title: {
           display: true,
-          text: 'Jumlah Hadir dan Terlambat Masuk per Bulan'
+          text: 'Jumlah Tepat Waktu dan Terlambat per Bulan - ' + lokasiCabang
         }
       }
     };
 
-    // Chart 1: Jumlah Hadir dan Terlambat Masuk
-    const ctx1 = document.getElementById('attendanceChart').getContext('2d');
-    new Chart(ctx1, {
+    // Inisialisasi Chart
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctx, {
       type: 'bar',
       data: attendanceData,
       options: attendanceOptions
-    });
-
-    // Data untuk Chart 2: Jumlah Cuti Per Bulan
-    const leaveData = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [
-        {
-          label: 'Jumlah Cuti',
-          backgroundColor: 'rgba(54, 162, 235, 0.5)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          data: [2, 4, 3, 5, 1, 2, 6, 3, 4, 2, 5, 3],
-        }
-      ]
-    };
-
-    const leaveOptions = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'Jumlah Cuti per Bulan'
-        }
-      }
-    };
-
-    // Chart 2: Jumlah Cuti Per Bulan
-    const ctx2 = document.getElementById('leaveChart').getContext('2d');
-    new Chart(ctx2, {
-      type: 'bar',
-      data: leaveData,
-      options: leaveOptions
     });
   </script>
 

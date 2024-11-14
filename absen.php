@@ -1,7 +1,6 @@
 <?php
 require_once("etc/config.php");
 
-
 $nama = "";
 $id = 1;
 $nomor_induk = "";
@@ -9,15 +8,23 @@ $absen = date('Y-m-d H:i:s');
 $absen_maks = date('Y-m-d H:i:s', strtotime('+8 hours')); 
 $idmesin = 1; 
 
-
 if (isset($_POST['tag'])) {
     $result = mysqli_query($mysqli, "SELECT nomor_induk, nama FROM pengguna WHERE tag = '{$_POST['tag']}'");
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
         $nomor_induk = $user['nomor_induk'];
         $nama = $user['nama'] . " (" . $nomor_induk . ")";
-        
-     
+
+        // Tentukan kategori (misalnya, kategori 1 untuk "tepat waktu" dan kategori 2 untuk "terlambat")
+        // Misalnya, jika jam absen kurang dari 09:00 dianggap tepat waktu
+        $jam_absen = date('H', strtotime($absen));
+        if ($jam_absen < 9) {
+            $kategori = 1; // Tepat waktu
+        } else {
+            $kategori = 2; // Terlambat
+        }
+
+        // Query untuk memasukkan data ke tabel absensi
         $query = "INSERT INTO absensi (nomor_induk, absen, absen_maks, kategori, idmesin) 
                   VALUES ('$nomor_induk', '$absen', '$absen_maks', '$kategori', '$idmesin')";
 
@@ -31,6 +38,7 @@ if (isset($_POST['tag'])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="id">
