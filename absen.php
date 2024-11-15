@@ -7,6 +7,7 @@ $nomor_induk = "";
 $absen = date('Y-m-d H:i:s'); 
 $absen_maks = date('Y-m-d H:i:s', strtotime('+8 hours')); 
 $idmesin = 1; 
+$pesan_absen = ""; 
 
 if (isset($_POST['tag'])) {
     $result = mysqli_query($mysqli, "SELECT nomor_induk, nama FROM pengguna WHERE tag = '{$_POST['tag']}'");
@@ -15,21 +16,18 @@ if (isset($_POST['tag'])) {
         $nomor_induk = $user['nomor_induk'];
         $nama = $user['nama'] . " (" . $nomor_induk . ")";
 
-        // Tentukan kategori (misalnya, kategori 1 untuk "tepat waktu" dan kategori 2 untuk "terlambat")
-        // Misalnya, jika jam absen kurang dari 09:00 dianggap tepat waktu
         $jam_absen = date('H', strtotime($absen));
         if ($jam_absen < 9) {
-            $kategori = 1; // Tepat waktu
+            $kategori = 1; 
         } else {
-            $kategori = 2; // Terlambat
+            $kategori = 2; 
         }
 
-        // Query untuk memasukkan data ke tabel absensi
         $query = "INSERT INTO absensi (nomor_induk, absen, absen_maks, kategori, idmesin) 
                   VALUES ('$nomor_induk', '$absen', '$absen_maks', '$kategori', '$idmesin')";
 
         if (mysqli_query($mysqli, $query)) {
-            echo "";
+            $pesan_absen = "ABSEN BERHASIL";
         } else {
             echo "Error: " . mysqli_error($mysqli);
         }
@@ -38,7 +36,6 @@ if (isset($_POST['tag'])) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="id">
@@ -52,6 +49,17 @@ if (isset($_POST['tag'])) {
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <style>
+        .pesan-absen {
+            font-size: 24px;
+            font-weight: bold;
+            color: green;
+            margin-bottom: 10px;
+        }
+        .nama-user {
+            font-size: 18px;
+        }
+    </style>
 </head>
 
 <body class="hold-transition lockscreen" onload="display_ct();">
@@ -59,7 +67,12 @@ if (isset($_POST['tag'])) {
         <div class="lockscreen-logo">
             <b id="ct"></b> <?php echo $nama_zona; ?>
         </div>
-        <div class="lockscreen-name"><?php echo $nama; ?></div>
+        
+        <!-- Pesan absen berhasil -->
+        <div class="text-center pesan-absen"><?php echo $pesan_absen; ?></div>
+        
+        <!-- Nama pengguna -->
+        <div class="lockscreen-name nama-user"><?php echo $nama; ?></div>
 
         <!-- Form scan tag -->
         <form method="post" action="">
