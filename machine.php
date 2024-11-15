@@ -34,10 +34,11 @@ if (isset($_GET['tag'])) {
     VALUES ('$nomor_induk','$waktu', '$maksimal', '$kategori', '$idmesin')";
 
     $result = mysqli_query($mysqli, $sql);
-    echo "Berhasil";
 
     if (!$result) {
         die('Query salah: ' . mysqli_error($mysqli));
+    } else {
+        echo "Berhasil";
     }
 }
 
