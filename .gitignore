@@ -71,3 +71,4 @@ ad.js
 /.cache/
 
 /img/logo.png
+/etc/config.php
