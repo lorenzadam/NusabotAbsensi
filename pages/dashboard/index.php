@@ -2,36 +2,42 @@
 require_once("../../etc/config.php");  
 require_once("../../etc/function.php"); 
 
-// Mengambil daftar cabang/gedung dari database
 $cabangGedungList = [];
 $lokasiCabang = "Semua Cabang";
-$result = mysqli_query($mysqli, "SELECT id, lokasi FROM cabang_gedung");
+$result = mysqli_query($mysqli, "
+    SELECT DISTINCT pengguna.cabang_gedung AS id, cabang_gedung.lokasi 
+    FROM pengguna
+    JOIN cabang_gedung ON pengguna.cabang_gedung = cabang_gedung.id
+");
+
 if ($result) {
     while ($row = mysqli_fetch_assoc($result)) {
         $cabangGedungList[] = $row;
     }
 }
 
-// Inisialisasi variabel data absensi
 $tepatWaktu = array_fill(0, 12, 0);
 $terlambat = array_fill(0, 12, 0);
 
-// Mengecek jika ada pilihan cabang/gedung
 $cabangGedungId = isset($_GET['cabangGedung']) ? (int)$_GET['cabangGedung'] : null;
 
-// Query untuk mengambil data absensi berdasarkan cabang/gedung yang dipilih
 if ($cabangGedungId) {
     $result = mysqli_query($mysqli, "
         SELECT MONTH(absensi.absen) AS bulan,
                SUM(CASE WHEN absensi.kategori = '1' THEN 1 ELSE 0 END) AS tepat_waktu,
                SUM(CASE WHEN absensi.kategori = '2' THEN 1 ELSE 0 END) AS terlambat
         FROM absensi
-        WHERE absensi.id_cabang = $cabangGedungId
+        JOIN pengguna ON absensi.nomor_induk = pengguna.nomor_induk
+        WHERE pengguna.cabang_gedung = $cabangGedungId
         GROUP BY MONTH(absensi.absen)
     ");
 
-    // Mendapatkan nama lokasi untuk cabang yang dipilih
-    $lokasiResult = mysqli_query($mysqli, "SELECT lokasi FROM cabang_gedung WHERE id = $cabangGedungId");
+    $lokasiResult = mysqli_query($mysqli, "
+        SELECT lokasi 
+        FROM cabang_gedung 
+        WHERE id = $cabangGedungId 
+        LIMIT 1
+    ");
     if ($lokasiResult) {
         $lokasiRow = mysqli_fetch_assoc($lokasiResult);
         $lokasiCabang = $lokasiRow['lokasi'];
@@ -46,6 +52,7 @@ if ($cabangGedungId) {
     }
 }
 ?>
+
 <style>
   .form-container {
     width: 80%;
@@ -92,7 +99,7 @@ if ($cabangGedungId) {
 <body>
 
   <!-- Form Pilihan Cabang/Gedung -->
-  <div class="form-container">
+<div class="form-container">
   <form method="GET" action="">
     <label for="cabangGedung">Pilih Cabang/Gedung:</label>
     <select name="cabangGedung" id="cabangGedung" onchange="this.form.submit()">
@@ -106,18 +113,16 @@ if ($cabangGedungId) {
   </form>
 </div>
 
-  <!-- Chart: Jumlah Tepat Waktu dan Terlambat per Bulan -->
+
   <div style="width: 80%; margin: auto; padding-top: 50px;">
     <canvas id="attendanceChart"></canvas>
   </div>
-
+  
   <script>
-    // Data dari PHP untuk Chart
     const tepatWaktu = <?php echo json_encode($tepatWaktu); ?>;
     const terlambat = <?php echo json_encode($terlambat); ?>;
     const lokasiCabang = "<?php echo $lokasiCabang; ?>";
 
-    // Data untuk Chart: Jumlah Tepat Waktu dan Terlambat per Bulan
     const attendanceData = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       datasets: [
