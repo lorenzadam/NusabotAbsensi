@@ -36,7 +36,9 @@ if (isset($_GET['tag'])) {
     $result = mysqli_query($mysqli, $sql);
 
     if (!$result) {
-        die('Query salah: ' . mysqli_error($conn));
+        die('Query salah: ' . mysqli_error($mysqli));
+    } else {
+        echo "Berhasil";
     }
 }
 
