@@ -33,6 +33,12 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="pages/mesin/mesin_absensi.php" class="nav-link">
+              <i class="nav-icon fas fa-globe"></i>
+              <p>Mesin Absensi</p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-wrench"></i>
               <p>Pengaturan<i class="fas fa-angle-left right"></i></p>
