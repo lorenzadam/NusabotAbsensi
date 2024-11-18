@@ -2,39 +2,33 @@
 require_once("../../etc/config.php");
 require_once("../../etc/function.php");
 
-// Inisialisasi variabel
 $id_mesin = '';
 $id_cabang_gedung = '';
 $keterangan = '';
 $isEdit = false;
-$message = '';
 
-// Proses Tambah/Ubah data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_mesin = $_POST['id_mesin'] ?? '';
     $id_cabang_gedung = $_POST['id_cabang_gedung'] ?? '';
     $keterangan = $_POST['keterangan'] ?? '';
 
     if ($id_mesin) {
-        // Proses Edit
         $query = "UPDATE mesin SET id_cabang_gedung = '$id_cabang_gedung', keterangan = '$keterangan' WHERE id_mesin = $id_mesin";
         if (mysqli_query($mysqli, $query)) {
-            $message = 'Data mesin berhasil diperbarui!';
+            echo "<script>alert('Data mesin berhasil diperbarui!'); window.location.href='mesin_absensi.php';</script>";
         } else {
-            $message = 'Error: ' . mysqli_error($mysqli);
+            echo "Error: " . mysqli_error($mysqli);
         }
     } else {
-        // Proses Tambah
         $query = "INSERT INTO mesin (id_cabang_gedung, keterangan) VALUES ('$id_cabang_gedung', '$keterangan')";
         if (mysqli_query($mysqli, $query)) {
-            $message = 'Data mesin berhasil ditambahkan!';
+            echo "<script>alert('Data mesin berhasil ditambahkan!'); window.location.href='mesin_absensi.php';</script>";
         } else {
-            $message = 'Error: ' . mysqli_error($mysqli);
+            echo "Error: " . mysqli_error($mysqli);
         }
     }
 }
 
-// Proses Ambil data untuk Edit
 if (isset($_GET['edit'])) {
     $id_mesin = $_GET['edit'];
     $result = mysqli_query($mysqli, "SELECT * FROM mesin WHERE id_mesin = $id_mesin");
@@ -44,99 +38,139 @@ if (isset($_GET['edit'])) {
         $isEdit = true;
     }
 }
+
+$queryCabang = "SELECT id, lokasi FROM cabang_gedung";
+$resultCabang = mysqli_query($mysqli, $queryCabang);
+
+// Query untuk tabel mesin dengan nama cabang
+$result = mysqli_query($mysqli, "
+    SELECT 
+        mesin.id_mesin, 
+        cabang_gedung.lokasi AS nama_cabang, 
+        mesin.keterangan 
+    FROM 
+        mesin 
+    INNER JOIN 
+        cabang_gedung 
+    ON 
+        mesin.id_cabang_gedung = cabang_gedung.id
+");
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mesin Absensi</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px;
-            background-color: #28a745;
-            color: white;
-            border-radius: 5px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1000;
-        }
-    </style>
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 </head>
-<body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Daftar Mesin Absensi</h2>
-        
-        <!-- Tombol untuk membuka form tambah/ubah -->
-        <button class="btn btn-primary mb-3" onclick="document.getElementById('form-container').style.display='block'">
-            <?php echo $isEdit ? 'Ubah Mesin' : 'Tambah Mesin Baru'; ?>
-        </button>
 
-        <!-- Form untuk Tambah atau Edit Mesin -->
-        <div id="form-container" class="card p-4 mb-4" style="display: <?php echo $isEdit ? 'block' : 'none'; ?>;">
-            <form action="mesin_absensi.php" method="post">
-                <input type="hidden" name="id_mesin" value="<?php echo $id_mesin; ?>">
-                <div class="form-group">
-                    <label for="id_cabang_gedung">ID Cabang Gedung:</label>
-                    <input type="text" name="id_cabang_gedung" id="id_cabang_gedung" class="form-control" value="<?php echo htmlspecialchars($id_cabang_gedung); ?>" required>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Daftar Mesin</h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="tabel-mesin" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID Mesin</th>
+                                        <th>Nama Cabang</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        echo "<tr>";
+                                        echo "<td>" . htmlspecialchars($row['id_mesin']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['nama_cabang']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['keterangan']) . "</td>";
+                                        echo "<td>
+                                                <a href='mesin_absensi.php?edit=" . $row['id_mesin'] . "' class='btn btn-primary btn-sm'>
+                                                    <i class='fas fa-edit'></i> Ubah
+                                                </a>
+                                              </td>";
+                                        echo "</tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card card-primary mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title"><?php echo $isEdit ? 'Ubah Mesin' : 'Tambah Mesin Baru'; ?></h3>
+                        </div>
+                        <form action="mesin_absensi.php" method="post">
+                            <input type="hidden" name="id_mesin" value="<?php echo $id_mesin; ?>">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="id_cabang_gedung">Cabang Gedung</label>
+                                    <select name="id_cabang_gedung" id="id_cabang_gedung" class="form-control" required>
+                                        <option value="" disabled selected>Pilih Cabang Gedung</option>
+                                        <?php
+                                        while ($cabang = mysqli_fetch_assoc($resultCabang)) {
+                                            $selected = $cabang['id'] == $id_cabang_gedung ? 'selected' : '';
+                                            echo "<option value='{$cabang['id']}' $selected>{$cabang['lokasi']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="keterangan">Keterangan</label>
+                                    <input type="text" name="keterangan" id="keterangan" class="form-control"
+                                        value="<?php echo htmlspecialchars($keterangan); ?>" required>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">
+                                    <?php echo $isEdit ? 'Simpan Perubahan' : 'Simpan'; ?>
+                                </button>
+                                <a href="mesin_absensi.php" class="btn btn-secondary">Batal</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="keterangan">Keterangan:</label>
-                    <input type="text" name="keterangan" id="keterangan" class="form-control" value="<?php echo htmlspecialchars($keterangan); ?>" required>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <?php echo $isEdit ? 'Simpan Perubahan' : 'Simpan'; ?>
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('form-container').style.display='none'">Batal</button>
-            </form>
+            </section>
         </div>
-
-        <!-- Tabel Daftar Mesin -->
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID Mesin</th>
-                    <th>ID Cabang Gedung</th>
-                    <th>Keterangan</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Query untuk mengambil data dari tabel mesin
-                $result = mysqli_query($mysqli, "SELECT * FROM mesin");
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['id_mesin']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['id_cabang_gedung']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['keterangan']) . "</td>";
-                    echo "<td><a href='mesin_absensi.php?edit=" . $row['id_mesin'] . "' class='btn btn-warning btn-sm'>Ubah</a></td>";
-                    echo "</tr>";
-                }
-                ?>
-            </tbody>
-        </table>
     </div>
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../../plugins/jszip/jszip.min.js"></script>
+    <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="../../dist/js/adminlte.min.js"></script>
 
-    <div id="notification" class="notification"></div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        const message = "<?php echo $message; ?>";
-        if (message) {
-            const notification = document.getElementById('notification');
-            notification.innerText = message;
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
+        $(function () {
+            $("#tabel-mesin").DataTable({
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                buttons: [
+                    "copy", "csv", "excel", "pdf", "print", "colvis"
+                ]
+            }).buttons().container().appendTo('#tabel-mesin_wrapper .col-md-6:eq(0)');
+        });
     </script>
 </body>
+
 </html>
