@@ -7,6 +7,7 @@ $id_mesin = '';
 $id_cabang_gedung = '';
 $keterangan = '';
 $isEdit = false;
+$message = '';
 
 // Proses Tambah/Ubah data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,17 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Proses Edit
         $query = "UPDATE mesin SET id_cabang_gedung = '$id_cabang_gedung', keterangan = '$keterangan' WHERE id_mesin = $id_mesin";
         if (mysqli_query($mysqli, $query)) {
-            echo "<script>alert('Data mesin berhasil diperbarui!'); window.location.href='mesin_absensi.php';</script>";
+            $message = 'Data mesin berhasil diperbarui!';
         } else {
-            echo "Error: " . mysqli_error($mysqli);
+            $message = 'Error: ' . mysqli_error($mysqli);
         }
     } else {
         // Proses Tambah
         $query = "INSERT INTO mesin (id_cabang_gedung, keterangan) VALUES ('$id_cabang_gedung', '$keterangan')";
         if (mysqli_query($mysqli, $query)) {
-            echo "<script>alert('Data mesin berhasil ditambahkan!'); window.location.href='mesin_absensi.php';</script>";
+            $message = 'Data mesin berhasil ditambahkan!';
         } else {
-            echo "Error: " . mysqli_error($mysqli);
+            $message = 'Error: ' . mysqli_error($mysqli);
         }
     }
 }
@@ -52,6 +53,20 @@ if (isset($_GET['edit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mesin Absensi</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -108,7 +123,20 @@ if (isset($_GET['edit'])) {
         </table>
     </div>
 
+    <div id="notification" class="notification"></div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const message = "<?php echo $message; ?>";
+        if (message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
