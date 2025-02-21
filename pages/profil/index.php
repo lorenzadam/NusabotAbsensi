@@ -118,4 +118,4 @@ $result =  mysqli_fetch_row(mysqli_query($mysqli, "SELECT * FROM pengguna where 
     </script>
 </body>
 
-</html>
+</html> 

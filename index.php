@@ -16,7 +16,7 @@ include('session.php');
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index.php" class="brand-link">
-        <img src="dist/img/logo.png" alt="Nusabot Logo" width="30%">
+        <img src="assets/img/neper.png" alt="Nusabot Logo" width="30%">
     </a>
       <!-- Sidebar -->
       <div class="sidebar">

@@ -53,7 +53,7 @@ if (isset($_POST['login'])) {
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <img src="dist/img/logo-all.png" alt="Nusabot Logo" width="30%">
+        <img src="assets/img/neper.png" alt="Nusabot Logo" width="30%">
       </div>
       <div class="card-body">
         <p class="login-box-msg"><?php echo $error ?></p>
